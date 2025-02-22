@@ -1,0 +1,72 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- Add Styles Here -->
+  <!--Button styles-->
+  <Style Selector="Button.round">
+    <Setter Property="CornerRadius" Value="45"></Setter>
+    <Setter Property="Height" Value="40"></Setter>
+    <Setter Property="Width" Value="200"></Setter>
+    <Setter Property="Padding" Value="0"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+  </Style>
+  
+  <Style Selector="Button.circle">
+    <Setter Property="CornerRadius" Value="45"></Setter>
+    <Setter Property="Height" Value="40"></Setter>
+    <Setter Property="Width" Value="40"></Setter>
+    <Setter Property="Margin" Value="2"></Setter>
+    <Setter Property="BorderThickness" Value="2"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+  </Style>
+  <Style Selector="Button.circle:pointerover /template/ ContentPresenter">
+    <Setter Property="BorderThickness" Value="2"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
+  </Style>
+
+  <Style Selector="Button.transparent">
+    <Setter Property="CornerRadius" Value="45"></Setter>
+    <Setter Property="Height" Value="40"></Setter>
+    <Setter Property="Width" Value="40"></Setter>
+    <Setter Property="Margin" Value="2"></Setter>
+    <Setter Property="Background" Value="Transparent"></Setter>
+  </Style> 
+  
+  
+  <!--Label styles-->
+  <Style Selector="Label.base">
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+  </Style>
+  
+  <!--Progress bar styles-->
+  <Style Selector="ProgressBar.base">
+    <Setter Property="Height" Value="12"></Setter>
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="Margin" Value="10,0,10,0"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryElement}"></Setter>
+    <!--<Setter Property="ShowProgressText" Value="True"></Setter>-->
+  </Style>
+  <!--Slider styles-->
+  <Style Selector="Slider.base">
+    <Setter Property="Width" Value="100"></Setter>
+    <Setter Property="Minimum" Value="0"></Setter>
+    <Setter Property="Maximum" Value="50"></Setter>
+  </Style>
+  <Style Selector="Thumb">
+    <Setter Property="Template">
+      <ControlTemplate TargetType="Thumb">
+        <Border Background="{DynamicResource PrimaryElement}" BorderThickness="1" CornerRadius="10">
+          <!-- CornerRadius half of width/height for a circle -->
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+</Styles>

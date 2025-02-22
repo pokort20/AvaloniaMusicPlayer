@@ -7,8 +7,14 @@
     <Application.Styles>
         <FluentTheme />
       <StyleInclude Source="Styles/AvaloniaDefaultStyles.axaml"></StyleInclude>
+      <StyleInclude Source="Styles/CustomStyles.axaml"></StyleInclude>
+      <StyleInclude Source="Styles/LayoutStyles.axaml"></StyleInclude>
     </Application.Styles>
   <Application.Resources>
-    <SolidColorBrush x:Key="PrimaryBackground">#14172D</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBG">#14172D</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryFG">#857C8D</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryElement">#180042</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryElement">#28006C</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryFont">#28006C</SolidColorBrush>
   </Application.Resources>
 </Application>
