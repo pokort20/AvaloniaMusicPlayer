@@ -19,6 +19,7 @@
         <RowDefinition Height="*"></RowDefinition>
       </Grid.RowDefinitions>
     
+      <!--Navigation panel-->
       <Grid Grid.Row="0">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="256"></ColumnDefinition>
@@ -34,7 +35,7 @@
                 <Border Width="34" Height="34" CornerRadius="20">
                   <Image Width="22" Height="22" Source="avares://AvaloniaFirstApp/Assets/Images/account.png"></Image>
                 </Border>
-                <Label Classes="base">AccountName</Label>
+                <Label Classes="base" Content="{Binding AccountName}"></Label>
               </StackPanel>
             </Button>
             
@@ -107,8 +108,8 @@
         </Border>
         <!--Border window controls-->
         <Border Grid.Column="2"></Border>
-        </Grid>
-    
+      </Grid>
+    <!--Main-->
     <Grid Grid.Row="1" ColumnDefinitions="256,*,256">
       <!--Border your music-->
       <Border Grid.Column="0">
@@ -117,12 +118,64 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
           </Grid.RowDefinitions>
-          <Label Grid.Row="0" FontSize="24" Classes="base">Your music</Label>
+          <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Your music</Label>
+
+          <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"></RowDefinition>
+              <RowDefinition Height="*"></RowDefinition>
+              <RowDefinition Height="*"></RowDefinition>
+              <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!--Playlists-->
+            <StackPanel Grid.Row="0">
+              <Label Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
+              <ItemsControl Classes="base">
+                <Label Classes="base">Playlist</Label>
+              </ItemsControl>
+            </StackPanel>
+
+            <!--Artists-->
+            <StackPanel Grid.Row="1">
+              <Label Classes="baseH2" Margin="20,0,0,0">Artists</Label>
+              <ItemsControl Classes="base">
+                <Label Classes="base">Artist</Label>
+              </ItemsControl>
+            </StackPanel>
+
+            <!--Albums-->
+            <StackPanel Grid.Row="2">
+              <Label Classes="baseH2" Margin="20,0,0,0">Albums</Label>
+              <ItemsControl Classes="base">
+                <Label Classes="base">Album</Label>
+              </ItemsControl>
+            </StackPanel>
+
+            <!--Podcasts-->
+            <StackPanel Grid.Row="3">
+              <Label Classes="baseH2" Margin="20,0,0,0">Podcasts</Label>
+              <ItemsControl Classes="base">
+                <Label Classes="base">Podcast</Label>
+              </ItemsControl>
+            </StackPanel>
+          </Grid>
         </Grid>
       </Border>
+
+
       <!--Border main content-->
-      <Border Grid.Column="1"></Border>
-      
+      <Border Grid.Column="1">
+        <TabControl Classes="base">
+          <TabItem Classes="base" Header="Songs"></TabItem>
+          <TabItem Classes="base" Header="Artists"></TabItem>
+          <TabItem Classes="base" Header="Albums"></TabItem>
+          <TabItem Classes="base" Header="Playlists"></TabItem>
+          <TabItem Classes="base" Header="Podcasts"></TabItem>
+        </TabControl>
+      </Border>
+
+
       <!--Border queue & suggestions-->
       <Border Grid.Column="2">
         <Grid>
@@ -135,7 +188,10 @@
               <RowDefinition Height="Auto"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" FontSize="24" Classes="base">Queue</Label>
+            <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Queue</Label>
+            <ItemsControl Grid.Row="1">
+              <Label Classes="base" HorizontalAlignment="Center">Track 1</Label>
+            </ItemsControl>
           </Grid>
 
           <Grid Grid.Row="1">
@@ -143,13 +199,15 @@
               <RowDefinition Height="Auto"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" FontSize="24" Classes="base">Suggestions</Label>
+            <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Suggestions</Label>
+            <ItemsControl Grid.Row="1">
+              <Label Classes="base" HorizontalAlignment="Center">Suggested track 1</Label>
+            </ItemsControl>
           </Grid>
 
         </Grid>
       </Border>
     </Grid>
-
-
+    
   </Grid>
 </UserControl>

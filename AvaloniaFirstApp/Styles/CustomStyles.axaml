@@ -42,10 +42,20 @@
   <!--Label styles-->
   <Style Selector="Label.base">
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
-    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
   </Style>
   
+  <Style Selector="Label.baseH1">
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="FontSize" Value="24"></Setter>
+  </Style>
+  
+  <Style Selector="Label.baseH2">
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="FontSize" Value="20"></Setter>
+  </Style>
   <!--Progress bar styles-->
   <Style Selector="ProgressBar.base">
     <Setter Property="Height" Value="12"></Setter>
@@ -67,6 +77,80 @@
           <!-- CornerRadius half of width/height for a circle -->
         </Border>
       </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <!--TabControl styles-->
+  <!--<Style Selector="TabControl.base">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TabControl">
+          <DockPanel>
+            --><!-- Customized TabStrip --><!--
+            <TabStrip DockPanel.Dock="Top"
+                      Margin="0,0,0,5"
+                      Background="LightGray"
+                      Padding="5"
+                      CornerRadius="4">
+              --><!-- You can further style TabItem elements using ItemContainerStyle --><!--
+            </TabStrip>
+            --><!-- ContentPresenter for the selected tab content --><!--
+            <ContentPresenter Name="PART_SelectedContentHost"
+                              Margin="5"
+                              Content="{TemplateBinding SelectedContent}"
+                              Background="WhiteSmoke"/>
+          </DockPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
+  <Style Selector="TabItem.base">
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TabItem">
+          <Border Background="{TemplateBinding Background}"
+                  Padding="{TemplateBinding Padding}"
+                  BorderBrush="Gray"
+                  BorderThickness="1"
+                  CornerRadius="3">
+            <ContentPresenter Content="{TemplateBinding Header}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource SecondaryFont}"/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style Selector="TabItem.base:selected">
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TabItem">
+          <Border Background="{TemplateBinding Background}"
+                  Padding="{TemplateBinding Padding}"
+                  BorderBrush="Gray"
+                  BorderThickness="1"
+                  CornerRadius="3">
+            <ContentPresenter Content="{TemplateBinding Header}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource PrimaryFont}"/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <Style Selector="ItemsControl.base">
+    <Setter Property="ItemsPanel">
+        <ItemsPanelTemplate>
+          <StackPanel HorizontalAlignment="Center"/>
+        </ItemsPanelTemplate>
     </Setter>
   </Style>
 </Styles>
