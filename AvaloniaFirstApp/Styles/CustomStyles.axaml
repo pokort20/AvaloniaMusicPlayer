@@ -60,7 +60,7 @@
   <Style Selector="ProgressBar.base">
     <Setter Property="Height" Value="12"></Setter>
     <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="Margin" Value="10,0,10,0"></Setter>
+    <!--<Setter Property="Margin" Value="10,0,10,0"></Setter>-->
     <Setter Property="Foreground" Value="{DynamicResource PrimaryElement}"></Setter>
     <!--<Setter Property="ShowProgressText" Value="True"></Setter>-->
   </Style>

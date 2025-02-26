@@ -54,7 +54,7 @@
         <Border Grid.Column="1">
           <Grid>
             <Grid.RowDefinitions>
-              <RowDefinition Height="80"></RowDefinition>
+              <RowDefinition Height="70"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
@@ -67,8 +67,8 @@
               <StackPanel Classes="leftH">
                 <Image Source="/Assets/avalonia-logo.ico"></Image>
                 <StackPanel Classes="leftV">
-                  <Label HorizontalAlignment="Left" Classes="base">Song name</Label>
-                  <Label Grid.Row="1" HorizontalAlignment="Left" Classes="base">Author name</Label>
+                  <Label HorizontalAlignment="Left" Classes="base" Content="{Binding SongName}"></Label>
+                  <Label Grid.Row="1" HorizontalAlignment="Left" Classes="base" Content="{Binding AuthorName}"></Label>
                 </StackPanel>
               </StackPanel>
               
@@ -80,8 +80,8 @@
                 <Button Classes="circle">
                   <Image Source="/Assets/Images/previous.png"></Image>
                 </Button>
-                <Button Classes="circle" Height="50" Width="50">
-                  <Image Source="/Assets/Images/play.png"></Image>
+                <Button Classes="circle" Height="50" Width="50" Command="{Binding PlayCommand}">
+                  <Image Source="{Binding PlayPauseImage}"></Image>
                 </Button>
                 <Button Classes="circle">
                   <Image Source="/Assets/Images/next.png"></Image>
@@ -94,16 +94,23 @@
               <!--Border volume-->
               <StackPanel Grid.Column="2" Classes="rightH">
                 <Button Classes="transparent">
-                  <Image Source="/Assets/Images/volume1.png"></Image>
+                  <Image Source="{Binding VolumeImage}"></Image>
                 </Button>
-                <Slider Classes="base"></Slider>
+                <Slider Classes="base" Value="{Binding Volume}"></Slider>
               </StackPanel>
             </Grid>
             
             <!--Song progression bar-->
-            <StackPanel Grid.Row="1">
-              <ProgressBar Classes="base" Value="50"></ProgressBar>
-            </StackPanel>
+            <Grid Grid.Row="1">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Label Classes="base" Margin="10,0,0,0" Grid.Column="0" Content="{Binding TimeElapsed}"></Label>
+              <ProgressBar Grid.Column="1" Classes="base" Value="37"></ProgressBar>
+              <Label Classes="base" Margin="0,0,10,0" Grid.Column="2" Content="{Binding TimeLeft}"></Label>
+            </Grid>
           </Grid>
         </Border>
         <!--Border window controls-->
@@ -189,8 +196,15 @@
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Queue</Label>
-            <ItemsControl Grid.Row="1">
-              <Label Classes="base" HorizontalAlignment="Center">Track 1</Label>
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding SongQueue}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="base" Content="{Binding name}"></Label>
+                    <Label Classes="base" Content="{Binding id}"></Label>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
             </ItemsControl>
           </Grid>
 
