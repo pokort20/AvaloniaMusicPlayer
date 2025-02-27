@@ -13,21 +13,27 @@ using AvaloniaFirstApp.Models;
 using AvaloniaFirstApp.Database;
 using System.Linq;
 using System.Collections;
+using System.Security.Principal;
+using System.Reactive.Linq;
+using DynamicData.Kernel;
 
 namespace AvaloniaFirstApp.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
     //private variables
-    private string _accountName;
     private string _songName;
     private string _authorName;
     private string _timeElapsed;
     private string _timeLeft;
+    private string _accountName;
+    private string _searchText;
     private double _volume;
     private Bitmap _playPauseImage;
     private Bitmap _volumeImage;
+    private Account _account;
 
+    private readonly DataHandler dh;
     private bool isPlaying;
     private Bitmap playImage;
     private Bitmap pauseImage;
@@ -39,6 +45,7 @@ public class MainViewModel : ViewModelBase
     public ObservableCollection<Song> SongQueue { get; } = new ObservableCollection<Song>();
     public ObservableCollection<Playlist> Playlists { get; } = new ObservableCollection<Playlist>();
     public ObservableCollection<Artist> Artists { get; } = new ObservableCollection<Artist>();
+    public ObservableCollection<Song> SearchSongs { get; } = new ObservableCollection<Song>();
 
     //commands
     public ReactiveCommand<Unit, string> PlayCommandA { get; }
@@ -46,13 +53,20 @@ public class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         isPlaying = false;
-        AccountName = "Tomas Pokorny";
         SongName = "sTraNgeRs";
         AuthorName = "Bring me the horizon";
         TimeElapsed = "1:01";
         TimeLeft = "2:11";
 
-        SongQueue.Add(new Song(0, "A banger song", null));
+        dh = new DataHandler();
+        LoadUserAccountAsync();
+
+        this.WhenAnyValue(x => x.SearchText)
+            .Throttle(TimeSpan.FromMilliseconds(300))
+            .DistinctUntilChanged()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(async text => await ShowSearchResults(text));
+
         InitUIImages();
         InitVariables();
 
@@ -89,11 +103,45 @@ public class MainViewModel : ViewModelBase
             Debug.WriteLine("Playing");
         }
         isPlaying = !isPlaying;
-        DbConnect();
     }
     #endregion
 
     #region properties
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if(_searchText != value)
+            {
+                this.RaiseAndSetIfChanged(ref _searchText, value);
+                Debug.WriteLine("Search: " + value);
+            }
+        }
+    }
+    public string AccountName
+    {
+        get => _accountName;
+        set
+        {
+            if(_accountName != value)
+            {
+                this.RaiseAndSetIfChanged(ref _accountName, value);
+            }
+        }
+    }
+    public Account UserAccount
+    {
+        get => _account;
+        set
+        {
+            if(_account != value)
+            {
+                _account = value;
+                this.RaiseAndSetIfChanged(ref _account, value);
+            }
+        }
+    }
     public double Volume
     {
         get => _volume;
@@ -126,17 +174,6 @@ public class MainViewModel : ViewModelBase
             if (_playPauseImage != value)
             {
                 this.RaiseAndSetIfChanged(ref _playPauseImage, value);
-            }
-        }
-    }
-    public string AccountName
-    {
-        get => _accountName;
-        set
-        {
-            if (_accountName != value)
-            {
-                this.RaiseAndSetIfChanged(ref _accountName, value);
             }
         }
     }
@@ -189,18 +226,39 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region methods
-    public void DbConnect()
+    private async Task ShowSearchResults(string searchTerm)
     {
-        using(var db = new DatabaseContext())
+        try
         {
-            foreach(Song s in db.Song.ToList())
+            SearchSongs.Clear();
+            foreach(var x in await dh.SearchSongs(searchTerm))
             {
-                Debug.WriteLine("Song: " + s.name);
-                SongQueue.Add(s);
+                SearchSongs.Add(x);
             }
         }
+        catch(Exception e)
+        {
+            Debug.WriteLine("An error occured, " + e.Message);
+        }
     }
+    private async Task LoadUserAccountAsync()
+    {
+        try
+        {
+            // Assuming you have some logic to get account id, here using a hardcoded account id for example
+            int accountId = 1;  // Replace with actual account ID logic
 
+            // Get the account asynchronously
+            UserAccount = await dh.GetUserAccount(accountId);
+            AccountName = UserAccount.username;
+            Debug.WriteLine("Account:" + UserAccount);
+        }
+        catch (Exception ex)
+        {
+            // Handle any potential exceptions, e.g., logging, displaying error message
+            Console.WriteLine($"Error loading account: {ex.Message}");
+        }
+    }
     private void InitVariables()
     {
         isPlaying = false;

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace AvaloniaFirstApp.Models
 {
-    public class Playlist
+    public class Artist
     {
-        public Playlist()
+        public Artist()
         {
             //empty constructor
         }
-        public Playlist(int id, string name, byte[] data)
+        public Artist(int id, string name, byte[] data)
         {
             this.id = id;
             this.name = name;
@@ -21,5 +21,8 @@ namespace AvaloniaFirstApp.Models
         public int id { get; set; }
         public string name { get; set; }
         public byte[] data { get; set; }
+
+        public List<SongArtist> SongArtists { get; set; }
+        public List<PodcastArtist> PodcastArtists { get; set; }
     }
 }

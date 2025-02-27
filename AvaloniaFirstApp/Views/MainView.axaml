@@ -27,7 +27,7 @@
           <ColumnDefinition Width="256"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <!--Border account & settings-->
-        <Border Grid.Column="0">
+        <Border Classes="base" Grid.Column="0">
           <StackPanel Classes="baseV">
             
             <Button Classes="round">
@@ -51,7 +51,7 @@
         </Border>
         
         <!--Border song-->
-        <Border Grid.Column="1">
+        <Border Classes="base" Grid.Column="1">
           <Grid>
             <Grid.RowDefinitions>
               <RowDefinition Height="70"></RowDefinition>
@@ -114,12 +114,12 @@
           </Grid>
         </Border>
         <!--Border window controls-->
-        <Border Grid.Column="2"></Border>
+        <Border Classes="base" Grid.Column="2"></Border>
       </Grid>
     <!--Main-->
     <Grid Grid.Row="1" ColumnDefinitions="256,*,256">
       <!--Border your music-->
-      <Border Grid.Column="0">
+      <Border Classes="base" Grid.Column="0">
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -172,19 +172,83 @@
 
 
       <!--Border main content-->
-      <Border Grid.Column="1">
-        <TabControl Classes="base">
-          <TabItem Classes="base" Header="Songs"></TabItem>
-          <TabItem Classes="base" Header="Artists"></TabItem>
-          <TabItem Classes="base" Header="Albums"></TabItem>
-          <TabItem Classes="base" Header="Playlists"></TabItem>
-          <TabItem Classes="base" Header="Podcasts"></TabItem>
-        </TabControl>
+      <Border Classes="base" Grid.Column="1">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+          </Grid.RowDefinitions>
+          <!--Search bar-->
+          <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Classes="circle">
+              <Image Source="/Assets/Images/left_arrow.png"></Image>
+            </Button>
+            <Button Grid.Column="1" Classes="circle">
+              <Image Source="/Assets/Images/right_arrow.png"></Image>
+            </Button>
+            <TextBox Text="{Binding SearchText, Mode=TwoWay}" Grid.Column="2" Classes="base"></TextBox>
+            <Button Grid.Column="3" Classes="circle">
+              <Image Source="/Assets/Images/home.png"></Image>
+            </Button>
+          </Grid>
+
+          <!--Tabs-->
+          <TabControl Grid.Row="1" Classes="base">
+            <TabItem Classes="base" Header="Songs">
+              <!--<DataGrid Name="songDataGrid" AutoGenerateColumns="False" Items="{Binding SearchSongs}">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Name" Binding="{Binding name}" />
+                  <DataGridTextColumn Header="Duration" Binding="{Binding duration}" />
+                </DataGrid.Columns>
+              </DataGrid>-->
+              <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding SearchSongs}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Label Grid.Column="0" Classes="baseCenter" Content="{Binding id}"></Label>
+                          <Image Grid.Column="1" Source="/Assets/Images/home.png" Width="30" Height="30" Margin="3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="2">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                            <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+                          </StackPanel>
+                          <Label Grid.Column="3" Classes="base" Content="{Binding duration}" Margin="0,0,40,0"></Label>
+                          <Button Grid.Column="4" Classes="circle">
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </TabItem>
+            <TabItem Classes="base" Header="Artists"></TabItem>
+            <TabItem Classes="base" Header="Albums"></TabItem>
+            <TabItem Classes="base" Header="Playlists"></TabItem>
+            <TabItem Classes="base" Header="Podcasts"></TabItem>
+          </TabControl>
+        </Grid>
+
       </Border>
 
 
       <!--Border queue & suggestions-->
-      <Border Grid.Column="2">
+      <Border Classes="base" Grid.Column="2">
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>

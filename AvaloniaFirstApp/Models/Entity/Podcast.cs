@@ -6,20 +6,24 @@ using System.Threading.Tasks;
 
 namespace AvaloniaFirstApp.Models
 {
-    public class Account
+    public class Podcast
     {
-        public Account()
+        public Podcast()
         {
             //empty constructor
         }
-        public Account(int id, string name, byte[] data)
+        public Podcast(int id, string name, string description, byte[] data)
         {
             this.id = id;
             this.name = name;
+            this.description = description;
             this.data = data;
         }
         public int id { get; set; }
         public string name { get; set; }
+        public string description { get; set; }
         public byte[] data { get; set; }
+
+        public List<PodcastArtist> PodcastArtists { get; set; }
     }
 }

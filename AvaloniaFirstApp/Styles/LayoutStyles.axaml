@@ -6,10 +6,28 @@
     </Border>
   </Design.PreviewWith>
 
-  <!-- Add Styles Here -->  
-  <Style Selector="Border">
+  <!-- Add Styles Here -->
+  <Style Selector="Border.song">
     <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="Background" Value="{DynamicResource PrimaryFG}"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
+    <Setter Property="Padding" Value="2"></Setter>
+    <Setter Property="Margin" Value="10,2,10,2"></Setter>
+  </Style>
+  <Style Selector="Border.song:pointerover">
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
+    <Setter Property="Padding" Value="2"></Setter>
+    <Setter Property="Margin" Value="10,2,10,2"></Setter>
+    <Setter Property="RenderTransform">
+      <Setter.Value>
+        <ScaleTransform ScaleX="1.01" ScaleY="1.05"></ScaleTransform>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  <Style Selector="Border.base">
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
     <Setter Property="Padding" Value="2"></Setter>
     <Setter Property="Margin" Value="2"></Setter>
   </Style>

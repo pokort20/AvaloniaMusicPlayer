@@ -44,6 +44,11 @@
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
   </Style>
+  <Style Selector="Label.baseCenter">
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+  </Style>
   
   <Style Selector="Label.baseH1">
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -64,6 +69,16 @@
     <Setter Property="Foreground" Value="{DynamicResource PrimaryElement}"></Setter>
     <!--<Setter Property="ShowProgressText" Value="True"></Setter>-->
   </Style>
+  
+  <!--TextBox styles-->
+  <Style Selector="TextBox.base">
+    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="BorderThickness" Value="5"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+    <Setter Property="FontSize" Value="20"></Setter>
+  </Style>
+  
   <!--Slider styles-->
   <Style Selector="Slider.base">
     <Setter Property="Width" Value="100"></Setter>

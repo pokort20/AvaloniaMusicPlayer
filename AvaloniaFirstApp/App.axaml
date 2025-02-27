@@ -11,11 +11,17 @@
       <StyleInclude Source="Styles/LayoutStyles.axaml"></StyleInclude>
     </Application.Styles>
   <Application.Resources>
-    <SolidColorBrush x:Key="PrimaryBG">#14172D</SolidColorBrush>
-    <SolidColorBrush x:Key="PrimaryFG">#857C8D</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBG">#857C8D</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryBG">#766785</SolidColorBrush>
+    <SolidColorBrush x:Key="TernaryBG">#AFABB3</SolidColorBrush>
     <SolidColorBrush x:Key="PrimaryElement">#180042</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryElement">#28006C</SolidColorBrush>
     <SolidColorBrush x:Key="PrimaryFont">#28006C</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryFont">#555282</SolidColorBrush>
+    <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="50%,100%">
+      <GradientStop Color="#766785" Offset="1.0"></GradientStop>
+      <GradientStop Color="#857C8D" Offset="0.5"></GradientStop>
+      <GradientStop Color="#766785" Offset="1.0"></GradientStop>
+    </LinearGradientBrush>
   </Application.Resources>
 </Application>

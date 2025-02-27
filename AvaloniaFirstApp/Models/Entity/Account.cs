@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace AvaloniaFirstApp.Models
 {
-    public class Artist
+    public class Account : ReactiveObject
     {
-        public Artist()
+        public Account()
         {
             //empty constructor
         }
-        public Artist(int id, string name, byte[] data)
+        public Account(int id, string name, byte[] data)
         {
             this.id = id;
-            this.name = name;
+            this.username = name;
             this.data = data;
         }
         public int id { get; set; }
-        public string name { get; set; }
+        public string username { get; set; }
         public byte[] data { get; set; }
     }
 }
