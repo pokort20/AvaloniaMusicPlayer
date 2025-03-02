@@ -43,5 +43,9 @@ namespace AvaloniaFirstApp.Models
                 return retVal;
             }
         }
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:MainViewModel"
+             x:Class="AvaloniaFirstApp.Views.ArtistTabItem">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ItemsControl ItemsSource="{Binding SearchArtists}" Padding="20">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="card">
+            <StackPanel Classes="baseV">
+              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+                      CommandParameter="{Binding}">
+                <Image Classes="cardImage" Width="150" Height="150"/>
+              </Button>
+              <Label Content="{Binding name}" Classes="Base" FontSize="16" HorizontalAlignment="Center"/>
+              <Label Classes="Base" Content="" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>

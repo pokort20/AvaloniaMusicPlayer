@@ -16,6 +16,9 @@ using System.Collections;
 using System.Security.Principal;
 using System.Reactive.Linq;
 using DynamicData.Kernel;
+using AvaloniaFirstApp.Support;
+using System.Reactive.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace AvaloniaFirstApp.ViewModels;
 
@@ -32,33 +35,53 @@ public class MainViewModel : ViewModelBase
     private Bitmap _playPauseImage;
     private Bitmap _volumeImage;
     private Account _account;
+    private int _selectedTabIndex;
 
     private readonly DataHandler dh;
+    private SongQueue sq;
     private bool isPlaying;
+    private bool isMuted;
+    private bool shuffle;
+    private bool repeat;
+    private double preMuteVolume;
     private Bitmap playImage;
     private Bitmap pauseImage;
     private Bitmap mutedImage;
     private Bitmap volumeLowImage;
     private Bitmap volumeHighImage;
+    private ObservableCollection<Song> _songs;
 
-    //Collections
+    #region Collections
     public ObservableCollection<Song> SongQueue { get; } = new ObservableCollection<Song>();
     public ObservableCollection<Playlist> Playlists { get; } = new ObservableCollection<Playlist>();
     public ObservableCollection<Artist> Artists { get; } = new ObservableCollection<Artist>();
     public ObservableCollection<Song> SearchSongs { get; } = new ObservableCollection<Song>();
+    public ObservableCollection<Album> SearchAlbums { get; } = new ObservableCollection<Album>();
+    public ObservableCollection<Artist> SearchArtists { get; } = new ObservableCollection<Artist>();
+    public ObservableCollection<Podcast> SearchPodcasts { get; } = new ObservableCollection<Podcast>();
+    public ObservableCollection<Playlist> SearchPlaylists { get; } = new ObservableCollection<Playlist>();
+    #endregion
 
-    //commands
+    #region Commands
     public ReactiveCommand<Unit, string> PlayCommandA { get; }
-    public ReactiveCommand<Unit, Unit> PlayCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShuffleCommand { get; }
+    public ReactiveCommand<Unit, Unit> RepeatCommand { get; }
+    public ReactiveCommand<Song, Unit> PlaySongCommand { get; }
+    public ReactiveCommand<Album, Unit> PlayAlbumCommand { get; }
+    public ReactiveCommand<Playlist, Unit> PlayPlaylistCommand { get; }
+    public ReactiveCommand<Artist, Unit> PlayArtistCommand { get; }
+    public ReactiveCommand<Podcast, Unit> PlayPodcastCommand { get; }
+    public ReactiveCommand<Unit, Unit> PlayPauseCommand { get; }
+    public ReactiveCommand<Unit, Unit> PreviousCommand { get; }
+    public ReactiveCommand<Unit, Unit> NextCommand { get; }
+    public ReactiveCommand<Unit, Unit> MuteCommand { get; }
+    #endregion
     public MainViewModel()
     {
-        isPlaying = false;
-        SongName = "sTraNgeRs";
-        AuthorName = "Bring me the horizon";
-        TimeElapsed = "1:01";
-        TimeLeft = "2:11";
-
         dh = new DataHandler();
+        sq = new SongQueue();
+        
+        InitVariables();
         LoadUserAccountAsync();
 
         this.WhenAnyValue(x => x.SearchText)
@@ -66,12 +89,30 @@ public class MainViewModel : ViewModelBase
             .DistinctUntilChanged()
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(async text => await ShowSearchResults(text));
+        this.WhenAnyValue(x => x.SelectedTabIndex)
+            .Throttle(TimeSpan.FromMilliseconds(300))
+            .DistinctUntilChanged()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(async text => await ShowSearchResults(SearchText));
 
         InitUIImages();
-        InitVariables();
+
 
         PlayCommandA = ReactiveCommand.CreateFromTask(PlayCommandAsync);
-        PlayCommand = ReactiveCommand.Create(PlayCommandExecute);
+        PlaySongCommand = ReactiveCommand.Create<Song>(PlaySongCommandExecute);
+        PlayAlbumCommand = ReactiveCommand.Create<Album>(PlayAlbumCommandExecute);
+        PlayArtistCommand = ReactiveCommand.CreateFromTask<Artist>(PlayArtistCommandExecuteAsync);
+        PlayPlaylistCommand = ReactiveCommand.CreateFromTask<Playlist>(PlayPlaylistCommandExecuteAsync);
+        PlayPodcastCommand = ReactiveCommand.Create<Podcast>(PlayPodcastCommandExecute);
+
+
+
+        PlayPauseCommand = ReactiveCommand.Create(PlayPauseCommandExecute);
+        MuteCommand = ReactiveCommand.Create(MuteCommandExecute);
+        PreviousCommand = ReactiveCommand.Create(PreviousCommandExecute);
+        NextCommand = ReactiveCommand.Create(NextCommandExecute);
+        ShuffleCommand = ReactiveCommand.Create(ShuffleCommandExecute);
+        RepeatCommand = ReactiveCommand.Create(RepeatCommandExecute);
 
         Console.WriteLine("MainViewModel initialized!");
     }
@@ -84,29 +125,139 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region executes
+    private void PreviousCommandExecute()
+    {
+        PlaySongCommandExecute(sq.Previous());
+        UpdateUIQueue();
+        Debug.WriteLine("Play previous song");
+    }
+    private void NextCommandExecute()
+    {
+        PlaySongCommandExecute(sq.Next());
+        UpdateUIQueue();
+        Debug.WriteLine("Play next song");
+    }
+    private void ShuffleCommandExecute()
+    {
+        shuffle = !shuffle;
+        if(shuffle)
+        {
+            sq.ShuffleQueue(includeCurrentPlayingSong: false);
+            UpdateUIQueue();
+        }
+        Debug.WriteLine("Shuffle: " + shuffle);
+    }
+    private void RepeatCommandExecute()
+    {
+        repeat = !repeat;
+        Debug.WriteLine("Repeat: " + repeat);
+    }
+    private void MuteCommandExecute()
+    {
+        if(isMuted)
+        {
+            Volume = preMuteVolume;
+        }
+        else
+        {
+            if(Volume != 0.0)preMuteVolume = Volume;
+            Volume = 0;
+        }
+        isMuted = !isMuted;
+    }
     private async Task<string> PlayCommandAsync()
     {
         TimeElapsed = "1:69";
         return "Playing";
     }
-    private void PlayCommandExecute()
+    private void PlayPauseCommandExecute()
     {
-        //do something
+        if (sq.CurrentPlayingSong == null) return;
         if (isPlaying)
         {
             PlayPauseImage = playImage;
+            AudioPlayer.Pause();
             Debug.WriteLine("Paused");
         }
         else
         {
+            SongName = sq.CurrentPlayingSong.name;
+            AuthorName = sq.CurrentPlayingSong.SongArtistsNames;
+            TimeLeft = sq.CurrentPlayingSong.duration.ToString(@"m\:ss");
+            TimeElapsed = sq.CurrentPlayingSong.duration.ToString(@"m\:ss");
             PlayPauseImage = pauseImage;
-            Debug.WriteLine("Playing");
+            AudioPlayer.Resume();
+
+            Debug.WriteLine("Playing song: " + sq.CurrentPlayingSong.name + ", made by:" + sq.CurrentPlayingSong.SongArtistsNames + ", duration: " + sq.CurrentPlayingSong.duration);
         }
         isPlaying = !isPlaying;
+    }
+    private void PlaySongCommandExecute(Song s)
+    {
+        if (s == null) return;
+        sq.CurrentPlayingSong = s;
+        SongName = s.name;
+        AuthorName = s.SongArtistsNames;
+        TimeLeft = s.duration.ToString(@"m\:ss");
+        TimeElapsed = s.duration.ToString(@"m\:ss");
+
+        isPlaying = true;
+        PlayPauseImage = pauseImage;
+        AudioPlayer.Play();
+        AudioPlayer.ChangeVolume((float)Utils.MapToRange(Volume, 0.0, 50.0, 0.0, 1.0));
+
+        Debug.WriteLine("Playing song: " + s.name + ", made by:" + s.SongArtistsNames + ", duration: " + s.duration);
+    }
+    private void PlayAlbumCommandExecute(Album album)
+    {
+        // Code to handle playing the album
+        Debug.WriteLine("Playing: " + album.ToString());
+    }
+    private async Task PlayPlaylistCommandExecuteAsync(Playlist playlist)
+    {
+        sq.ClearQueue();
+        foreach (var s in await dh.SearchSongs(playlist))
+        {
+            sq.Add(s);
+        }
+        if (shuffle) sq.ShuffleQueue(includeCurrentPlayingSong: true);
+        UpdateUIQueue();
+        PlaySongCommandExecute(sq.CurrentPlayingSong);
+        Debug.WriteLine("Playing: " + playlist.ToString());
+    }
+    private async Task PlayArtistCommandExecuteAsync(Artist artist)
+    {
+        sq.ClearQueue();
+        foreach (var s in await dh.SearchSongs(artist))
+        {
+            sq.Add(s);
+        }
+        if (shuffle) sq.ShuffleQueue(includeCurrentPlayingSong: true);
+        UpdateUIQueue();
+        PlaySongCommandExecute(sq.CurrentPlayingSong);
+        Debug.WriteLine("Playing: " + artist.ToString());
+    }
+    private void PlayPodcastCommandExecute(Podcast podcast)
+    {
+        // Code to handle playing the podcast
+        Debug.WriteLine("Playing: " + podcast.ToString());
     }
     #endregion
 
     #region properties
+    public int SelectedTabIndex
+    {
+        get => _selectedTabIndex;
+        set
+        {
+            if(_selectedTabIndex != value)
+            {
+                this.RaiseAndSetIfChanged(ref _selectedTabIndex, value);
+                Debug.WriteLine("Selected tab index: " + value);
+            }
+        }
+    }
+
     public string SearchText
     {
         get => _searchText;
@@ -150,6 +301,7 @@ public class MainViewModel : ViewModelBase
             if (_volume != value)
             {
                 this.RaiseAndSetIfChanged(ref _volume, value);
+                AudioPlayer.ChangeVolume((float)Utils.MapToRange(value, 0.0, 50.0, 0.0, 1.0));
                 ChangeVolumeImage(value);
                 Debug.WriteLine("Volume: " + value);
             }
@@ -196,7 +348,7 @@ public class MainViewModel : ViewModelBase
         {
             if (_authorName != value)
             {
-                this.RaiseAndSetIfChanged(ref _timeElapsed, value);
+                this.RaiseAndSetIfChanged(ref _authorName, value);
             }
         }
     }
@@ -226,15 +378,57 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region methods
+    private void UpdateUIQueue()
+    {
+        SongQueue.Clear();
+        foreach(Song s in sq.GetSongs())
+        {
+            SongQueue.Add(s);
+        }
+    }
     private async Task ShowSearchResults(string searchTerm)
     {
         try
         {
-            SearchSongs.Clear();
-            foreach(var x in await dh.SearchSongs(searchTerm))
+            switch(SelectedTabIndex)
             {
-                SearchSongs.Add(x);
+                case 0:
+                    //Song
+                    SearchSongs.Clear();
+                    foreach (var x in await dh.SearchSongs(searchTerm))
+                    {
+                        SearchSongs.Add(x);
+                    }
+                    break;
+                case 1:
+                    //Artist
+                    SearchArtists.Clear();
+                    foreach (var x in await dh.SearchItems<Artist>(searchTerm))
+                    {
+                        SearchArtists.Add(x);
+                    }
+                    break;
+                case 2:
+                    //Albums
+                    SearchAlbums.Clear();
+                    foreach (var x in await dh.SearchAlbums(searchTerm))
+                    {
+                        SearchAlbums.Add(x);
+                    }
+                    break;
+                case 3:
+                    //Playlists
+                    SearchPlaylists.Clear();
+                    foreach (var x in await dh.SearchItems<Playlist>(searchTerm))
+                    {
+                        SearchPlaylists.Add(x);
+                    }
+                    break;
+                case 4:
+                    //Podcasts
+                    break;
             }
+
         }
         catch(Exception e)
         {
@@ -261,8 +455,12 @@ public class MainViewModel : ViewModelBase
     }
     private void InitVariables()
     {
+        isMuted = false;
         isPlaying = false;
-        Volume = 25;
+        shuffle = false;
+        repeat = false;
+        SelectedTabIndex = 0;
+        Volume = 2;
     }
     private void InitUIImages()
     {

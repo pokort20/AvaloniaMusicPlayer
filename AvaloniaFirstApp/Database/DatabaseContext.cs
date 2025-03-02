@@ -11,13 +11,16 @@ namespace AvaloniaFirstApp.Database
     public class DatabaseContext : DbContext
     {
         public DbSet<Song> Songs { get; set; }
+        public DbSet<Album> Albums { get; set; }
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Podcast> Podcasts { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<SongArtist> SongArtists { get; set; }
-        public DbSet<SongPlaylist> SongPlaylists { get; set; }
+        public DbSet<PodcastArtist> AlbumArtists { get; set; }
         public DbSet<PodcastArtist> PodcastArtists { get; set; }
+        public DbSet<SongPlaylist> SongPlaylists { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseNpgsql("Host=localhost;Username=postgres;Password=admin;Database=MusicPlayer");
@@ -28,18 +31,22 @@ namespace AvaloniaFirstApp.Database
 
             //table names
             modelBuilder.Entity<Song>().ToTable("song");
+            modelBuilder.Entity<Album>().ToTable("album");
             modelBuilder.Entity<Artist>().ToTable("artist");
             modelBuilder.Entity<Podcast>().ToTable("podcast");
-            modelBuilder.Entity<Playlist>().ToTable("playlists");
+            modelBuilder.Entity<Playlist>().ToTable("playlist");
 
             modelBuilder.Entity<SongArtist>().ToTable("song_artist");
+            modelBuilder.Entity<AlbumArtist>().ToTable("album_artist");
             modelBuilder.Entity<SongPlaylist>().ToTable("song_playlist");
             modelBuilder.Entity<PodcastArtist>().ToTable("podcast_artist");
 
+
             //primary keys of relation tables
             modelBuilder.Entity<SongArtist>().HasKey(sa => new { sa.songid, sa.artistid });
-            modelBuilder.Entity<SongPlaylist>().HasKey(sp => new { sp.songid, sp.playlistid });
+            modelBuilder.Entity<AlbumArtist>().HasKey(aa => new { aa.albumid, aa.artistid });
             modelBuilder.Entity<PodcastArtist>().HasKey(pa => new { pa.podcastid, pa.artistid });
+            modelBuilder.Entity<SongPlaylist>().HasKey(sp => new { sp.songid, sp.playlistid });
 
 
             //Relationships
@@ -51,6 +58,15 @@ namespace AvaloniaFirstApp.Database
                 .HasOne(sa => sa.Artist)
                 .WithMany(a => a.SongArtists)
                 .HasForeignKey(sa => sa.artistid);
+
+            modelBuilder.Entity<AlbumArtist>()
+                .HasOne(aa => aa.Album)
+                .WithMany(al => al.AlbumArtists)
+                .HasForeignKey(aa => aa.artistid);
+            modelBuilder.Entity<AlbumArtist>()
+               .HasOne(aa => aa.Artist)
+               .WithMany(ar => ar.AlbumArtists)
+               .HasForeignKey(aa => aa.albumid);
 
             modelBuilder.Entity<SongPlaylist>()
                 .HasOne(sp => sp.Song)

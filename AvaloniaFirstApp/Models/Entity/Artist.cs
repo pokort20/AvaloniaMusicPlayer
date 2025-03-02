@@ -23,6 +23,7 @@ namespace AvaloniaFirstApp.Models
         public byte[] data { get; set; }
 
         public List<SongArtist> SongArtists { get; set; }
+        public List<AlbumArtist> AlbumArtists { get; set; }
         public List<PodcastArtist> PodcastArtists { get; set; }
     }
 }

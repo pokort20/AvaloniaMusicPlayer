@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:AvaloniaFirstApp.Views"
              xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="AvaloniaFirstApp.Views.MainView"
@@ -74,26 +75,26 @@
               
               <!--Stack panel play controls-->
               <StackPanel Classes="baseH" Grid.Column="1">
-                <Button Classes="transparent" Margin="0,0,20,0">
+                <Button Classes="transparent" Command="{Binding ShuffleCommand}" Margin="0,0,20,0">
                   <Image Width="25" Height=" 25" Source="/Assets/Images/shuffle.png"></Image>
                 </Button>
-                <Button Classes="circle">
+                <Button Classes="circle" Command="{Binding PreviousCommand}">
                   <Image Source="/Assets/Images/previous.png"></Image>
                 </Button>
-                <Button Classes="circle" Height="50" Width="50" Command="{Binding PlayCommand}">
+                <Button Classes="circle" Height="50" Width="50" Command="{Binding PlayPauseCommand}">
                   <Image Source="{Binding PlayPauseImage}"></Image>
                 </Button>
-                <Button Classes="circle">
+                <Button Classes="circle" Command="{Binding NextCommand}">
                   <Image Source="/Assets/Images/next.png"></Image>
                 </Button>
-                <Button Classes="transparent" Margin="20,0,0,0">
+                <Button Classes="transparent" Margin="20,0,0,0" Command="{Binding RepeatCommand}">
                   <Image Width="20" Height="20" Source="/Assets/Images/repeat.png"></Image>
                 </Button>
               </StackPanel>
               
               <!--Border volume-->
               <StackPanel Grid.Column="2" Classes="rightH">
-                <Button Classes="transparent">
+                <Button Classes="transparent" Command="{Binding MuteCommand}">
                   <Image Source="{Binding VolumeImage}"></Image>
                 </Button>
                 <Slider Classes="base" Value="{Binding Volume}"></Slider>
@@ -199,48 +200,22 @@
           </Grid>
 
           <!--Tabs-->
-          <TabControl Grid.Row="1" Classes="base">
+          <TabControl Grid.Row="1" Classes="base" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Classes="base" Header="Songs">
-              <!--<DataGrid Name="songDataGrid" AutoGenerateColumns="False" Items="{Binding SearchSongs}">
-                <DataGrid.Columns>
-                  <DataGridTextColumn Header="Name" Binding="{Binding name}" />
-                  <DataGridTextColumn Header="Duration" Binding="{Binding duration}" />
-                </DataGrid.Columns>
-              </DataGrid>-->
-              <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding SearchSongs}">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <Border Classes="song">
-                        <Grid>
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"></ColumnDefinition>
-                            <ColumnDefinition Width="50"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition Width="50"></ColumnDefinition>
-                          </Grid.ColumnDefinitions>
-                          <Label Grid.Column="0" Classes="baseCenter" Content="{Binding id}"></Label>
-                          <Image Grid.Column="1" Source="/Assets/Images/home.png" Width="30" Height="30" Margin="3"></Image>
-                          <StackPanel Classes="leftV" Grid.Column="2">
-                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                            <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
-                          </StackPanel>
-                          <Label Grid.Column="3" Classes="base" Content="{Binding duration}" Margin="0,0,40,0"></Label>
-                          <Button Grid.Column="4" Classes="circle">
-                            <Image Source="/Assets/Images/play.png"></Image>
-                          </Button>
-                        </Grid>
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </ScrollViewer>
+              <views:SongTabItem DataContext="{Binding}"/>
             </TabItem>
-            <TabItem Classes="base" Header="Artists"></TabItem>
-            <TabItem Classes="base" Header="Albums"></TabItem>
-            <TabItem Classes="base" Header="Playlists"></TabItem>
-            <TabItem Classes="base" Header="Podcasts"></TabItem>
+            <TabItem Classes="base" Header="Artists">
+              <views:ArtistTabItem DataContext="{Binding}"/>
+            </TabItem>
+            <TabItem Classes="base" Header="Albums">
+              <views:AlbumTabItem DataContext="{Binding}"/>
+            </TabItem>
+            <TabItem Classes="base" Header="Playlists">
+              <views:PlaylistTabItem DataContext="{Binding}"/>
+            </TabItem>
+            <TabItem Classes="base" Header="Podcasts">
+              
+            </TabItem>
           </TabControl>
         </Grid>
 
@@ -260,7 +235,34 @@
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Queue</Label>
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding SongQueue}">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+              <ItemsControl  ItemsSource="{Binding SongQueue}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border Classes="song">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          <ColumnDefinition Width="*"></ColumnDefinition>
+                          <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                        <StackPanel Classes="leftV" Grid.Column="1">
+                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                          <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+                        </StackPanel>
+                        <Button Grid.Column="2" Classes="circle"
+                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                                CommandParameter="{Binding}" >
+                          <Image Source="/Assets/Images/play.png"></Image>
+                        </Button>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <!--<ItemsControl Grid.Row="1" ItemsSource="{Binding SongQueue}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal">
@@ -269,7 +271,7 @@
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            </ItemsControl>-->
           </Grid>
 
           <Grid Grid.Row="1">

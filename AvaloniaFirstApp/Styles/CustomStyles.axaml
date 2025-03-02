@@ -38,7 +38,13 @@
     <Setter Property="Background" Value="Transparent"></Setter>
   </Style> 
   
-  
+  <!--Image styles-->
+  <Style Selector="Image.cardImage">
+    <Setter Property="Source" Value="avares://AvaloniaFirstApp/Assets/Images/account.png"></Setter>
+  </Style>
+  <Style Selector="Image.cardImage:pointerover">
+    <Setter Property="Source" Value="avares://AvaloniaFirstApp/Assets/Images/play.png"></Setter>
+  </Style>
   <!--Label styles-->
   <Style Selector="Label.base">
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -72,12 +78,33 @@
   
   <!--TextBox styles-->
   <Style Selector="TextBox.base">
-    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
+    <Setter Property="Background" Value="{DynamicResource SecondaryBG}"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
-    <Setter Property="BorderThickness" Value="5"></Setter>
+    <Setter Property="CaretBrush" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="BorderThickness" Value="3"></Setter>
+    <Setter Property="CornerRadius" Value="10"></Setter>
     <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
     <Setter Property="FontSize" Value="20"></Setter>
   </Style>
+  <Style Selector="TextBox.base:focus-within /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource TernaryBG}"></Setter>
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+  </Style>
+  <Style Selector="TextBox.base:pointerover /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource TernaryBG}"></Setter>
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+  </Style>
+  <!--<Style Selector="TextBox.base:pointerover /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="CaretBrush" Value="{DynamicResource PrimaryFont}"></Setter>
+    <Setter Property="BorderThickness" Value="3"></Setter>
+    <Setter Property="CornerRadius" Value="10"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+    <Setter Property="FontSize" Value="20"></Setter>
+  </Style>-->
   
   <!--Slider styles-->
   <Style Selector="Slider.base">

@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:MainViewModel"
+             x:Class="AvaloniaFirstApp.Views.SongTabItem">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ItemsControl Grid.Row="1" ItemsSource="{Binding SearchSongs}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="song">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Label Grid.Column="0" Classes="baseCenter" Content="{Binding id}"></Label>
+              <Image Grid.Column="1" Source="/Assets/Images/home.png" Width="30" Height="30" Margin="3"></Image>
+              <StackPanel Classes="leftV" Grid.Column="2">
+                <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+              </StackPanel>
+              <Label Grid.Column="3" Classes="base" Content="{Binding duration}" Margin="0,0,40,0"></Label>
+              <Button Grid.Column="4" Classes="circle"
+                      Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                      CommandParameter="{Binding}" >
+                <Image Source="/Assets/Images/play.png"></Image>
+              </Button>
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>
