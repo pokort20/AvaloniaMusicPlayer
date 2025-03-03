@@ -107,21 +107,44 @@
   </Style>-->
   
   <!--Slider styles-->
-  <Style Selector="Slider.base">
+  <Style Selector="Slider.volume">
     <Setter Property="Width" Value="100"></Setter>
     <Setter Property="Minimum" Value="0"></Setter>
     <Setter Property="Maximum" Value="50"></Setter>
   </Style>
-  <Style Selector="Thumb">
+
+  <Style Selector="Slider.song">
+    <Setter Property="Minimum" Value="0"></Setter>
+    <Setter Property="Maximum" Value="50"></Setter>
+    <Setter Property="Margin" Value="0,-12,0,0"></Setter>
+  </Style>
+  <Style Selector="Slider.song /template/ Track">
+    <Setter Property="Height" Value="20"></Setter>
+  </Style>
+
+  <!-- Default Thumb Style (Visible by default) -->
+  <Style Selector="Slider.volume Thumb">
     <Setter Property="Template">
       <ControlTemplate TargetType="Thumb">
         <Border Background="{DynamicResource PrimaryElement}" BorderThickness="1" CornerRadius="10">
-          <!-- CornerRadius half of width/height for a circle -->
         </Border>
       </ControlTemplate>
     </Setter>
   </Style>
 
+  <!-- Hide Thumb for Slider.song by default -->
+  <Style Selector="Slider.song Thumb">
+    <Setter Property="IsVisible" Value="False"></Setter>
+    <Setter Property="Background" Value="Transparent"></Setter>
+  </Style>
+
+  <!-- Show Thumb for Slider.song on pointerover -->
+  <Style Selector="Slider.song:pointerover Thumb">
+    <Setter Property="IsVisible" Value="True"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PrimaryElement}"></Setter>
+  </Style>
+
+  
   <!--TabControl styles-->
   <!--<Style Selector="TabControl.base">
     <Setter Property="Template">

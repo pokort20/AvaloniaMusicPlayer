@@ -32,10 +32,13 @@ public class MainViewModel : ViewModelBase
     private string _accountName;
     private string _searchText;
     private double _volume;
+    private double _songProgress;
     private Bitmap _playPauseImage;
     private Bitmap _volumeImage;
     private Account _account;
     private int _selectedTabIndex;
+    private bool _isHomePageVisible;
+    private bool _isTabControlVisible;
 
     private readonly DataHandler dh;
     private SongQueue sq;
@@ -49,7 +52,6 @@ public class MainViewModel : ViewModelBase
     private Bitmap mutedImage;
     private Bitmap volumeLowImage;
     private Bitmap volumeHighImage;
-    private ObservableCollection<Song> _songs;
 
     #region Collections
     public ObservableCollection<Song> SongQueue { get; } = new ObservableCollection<Song>();
@@ -60,6 +62,12 @@ public class MainViewModel : ViewModelBase
     public ObservableCollection<Artist> SearchArtists { get; } = new ObservableCollection<Artist>();
     public ObservableCollection<Podcast> SearchPodcasts { get; } = new ObservableCollection<Podcast>();
     public ObservableCollection<Playlist> SearchPlaylists { get; } = new ObservableCollection<Playlist>();
+    public ObservableCollection<Song> TrendingSongs { get; } = new ObservableCollection<Song>();
+    public ObservableCollection<Artist> TrendingArtists { get; } = new ObservableCollection<Artist>();
+    public ObservableCollection<Song> SuggestedSongs { get; } = new ObservableCollection<Song>();
+    public ObservableCollection<Artist> SuggestedArtists { get; } = new ObservableCollection<Artist>();
+
+
     #endregion
 
     #region Commands
@@ -75,6 +83,10 @@ public class MainViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> PreviousCommand { get; }
     public ReactiveCommand<Unit, Unit> NextCommand { get; }
     public ReactiveCommand<Unit, Unit> MuteCommand { get; }
+    public ReactiveCommand<Unit, Unit> HomeCommand { get; }
+
+    public ReactiveCommand<PointerPressedEventArgs, Unit> OnSongBarClicked { get; }
+
     #endregion
     public MainViewModel()
     {
@@ -113,7 +125,11 @@ public class MainViewModel : ViewModelBase
         NextCommand = ReactiveCommand.Create(NextCommandExecute);
         ShuffleCommand = ReactiveCommand.Create(ShuffleCommandExecute);
         RepeatCommand = ReactiveCommand.Create(RepeatCommandExecute);
+        HomeCommand = ReactiveCommand.Create(HomeCommandExecute);
 
+        OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
+
+        InitHomePage();
         Console.WriteLine("MainViewModel initialized!");
     }
     #region events
@@ -125,6 +141,14 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region executes
+    private void HandleSongProgressClicked(PointerPressedEventArgs e)
+    {
+        var point = e.GetPosition(null); // Get the position relative to the window (or use the ProgressBar itself if needed)
+        var progress = point.X / 300; // Assuming the ProgressBar's width is 300
+
+        SongProgress = Math.Min(Math.Max(progress, 0), 1);
+        Debug.WriteLine("progress bar click value: " + SongProgress + ", progress: " + progress);
+    }
     private void PreviousCommandExecute()
     {
         PlaySongCommandExecute(sq.Previous());
@@ -146,6 +170,10 @@ public class MainViewModel : ViewModelBase
             UpdateUIQueue();
         }
         Debug.WriteLine("Shuffle: " + shuffle);
+    }
+    private void HomeCommandExecute()
+    {
+        SearchText = string.Empty;
     }
     private void RepeatCommandExecute()
     {
@@ -245,6 +273,40 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region properties
+    public double SongProgress
+    {
+        get => _songProgress;
+        set
+        {
+            if(_songProgress != value)
+            {
+                this.RaiseAndSetIfChanged(ref _songProgress, value);
+            }
+        }
+    }
+    public bool IsTabControlVisible
+    {
+        get => _isTabControlVisible;
+        set
+        {
+            if (_isTabControlVisible != value)
+            {
+                this.RaiseAndSetIfChanged(ref _isTabControlVisible, value);
+            }
+        }
+    }
+    public bool IsHomePageVisible
+    {
+        get => _isHomePageVisible;
+        set
+        {
+            if (_isHomePageVisible != value)
+            {
+                this.RaiseAndSetIfChanged(ref _isHomePageVisible, value);
+                IsTabControlVisible = !value;
+            }
+        }
+    }
     public int SelectedTabIndex
     {
         get => _selectedTabIndex;
@@ -266,6 +328,14 @@ public class MainViewModel : ViewModelBase
             if(_searchText != value)
             {
                 this.RaiseAndSetIfChanged(ref _searchText, value);
+                if (value == string.Empty || value == null || value == "")
+                {
+                    IsHomePageVisible = true;
+                }
+                else
+                {
+                    IsHomePageVisible = false;
+                }
                 Debug.WriteLine("Search: " + value);
             }
         }
@@ -378,6 +448,30 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region methods
+    private async void InitHomePage()
+    {
+        TrendingSongs.Clear();
+        TrendingArtists.Clear();
+        SuggestedSongs.Clear();
+        SuggestedArtists.Clear();
+        foreach (var x in await dh.TrendingSongs(3))
+        {
+            TrendingSongs.Add(x);
+        }
+        foreach (var x in await dh.TrendingArtists(2))
+        {
+            TrendingArtists.Add(x);
+        }
+        foreach (var x in await dh.SuggestedSongs(3))
+        {
+            SuggestedSongs.Add(x);
+        }
+        foreach (var x in await dh.SuggestedArtists(2))
+        {
+            SuggestedArtists.Add(x);
+        }
+        IsHomePageVisible = true;
+    }
     private void UpdateUIQueue()
     {
         SongQueue.Clear();

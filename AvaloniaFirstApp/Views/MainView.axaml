@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:AvaloniaFirstApp.Views"
              xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
              x:Class="AvaloniaFirstApp.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -14,7 +16,7 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
-  <Grid Background="{DynamicResource PrimaryBG}">
+  <Grid Background="{DynamicResource SecondaryBG}">
       <Grid.RowDefinitions>
         <RowDefinition Height="100"></RowDefinition>
         <RowDefinition Height="*"></RowDefinition>
@@ -68,7 +70,7 @@
               <StackPanel Classes="leftH">
                 <Image Source="/Assets/avalonia-logo.ico"></Image>
                 <StackPanel Classes="leftV">
-                  <Label HorizontalAlignment="Left" Classes="base" Content="{Binding SongName}"></Label>
+                  <Label HorizontalAlignment="Left" Classes="base" FontSize="16" Content="{Binding SongName}"></Label>
                   <Label Grid.Row="1" HorizontalAlignment="Left" Classes="base" Content="{Binding AuthorName}"></Label>
                 </StackPanel>
               </StackPanel>
@@ -97,7 +99,7 @@
                 <Button Classes="transparent" Command="{Binding MuteCommand}">
                   <Image Source="{Binding VolumeImage}"></Image>
                 </Button>
-                <Slider Classes="base" Value="{Binding Volume}"></Slider>
+                <Slider Classes="volume" Value="{Binding Volume}"></Slider>
               </StackPanel>
             </Grid>
             
@@ -108,9 +110,16 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
               </Grid.ColumnDefinitions>
-              <Label Classes="base" Margin="10,0,0,0" Grid.Column="0" Content="{Binding TimeElapsed}"></Label>
-              <ProgressBar Grid.Column="1" Classes="base" Value="37"></ProgressBar>
-              <Label Classes="base" Margin="0,0,10,0" Grid.Column="2" Content="{Binding TimeLeft}"></Label>
+              <Label Classes="base" VerticalAlignment="Center" Margin="10,0,0,0" Width="40" Grid.Column="0" Content="{Binding TimeElapsed}"></Label>
+              <Slider Classes="song" Grid.Column="1" Value="{Binding SongProgress}"></Slider>
+              <!--<ProgressBar x:Name="SongProgressBar" Grid.Column="1" Classes="base" Value="{Binding SongProgress}">
+                <i:Interaction.Behaviors>
+                  <ia:EventTriggerBehavior EventName="PointerPressed"  SourceObject="{Binding #SongProgressBar}">
+                    <ia:InvokeCommandAction Command="{Binding OnSongBarClicked}"></ia:InvokeCommandAction>
+                  </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+              </ProgressBar>-->
+              <Label Classes="base" VerticalAlignment="Center" Margin="0,0,10,0" Width="40" Grid.Column="2" Content="{Binding TimeLeft}"></Label>
             </Grid>
           </Grid>
         </Border>
@@ -194,13 +203,14 @@
               <Image Source="/Assets/Images/right_arrow.png"></Image>
             </Button>
             <TextBox Text="{Binding SearchText, Mode=TwoWay}" Grid.Column="2" Classes="base"></TextBox>
-            <Button Grid.Column="3" Classes="circle">
+            <Button Grid.Column="3" Classes="circle" Command="{Binding HomeCommand}">
               <Image Source="/Assets/Images/home.png"></Image>
             </Button>
           </Grid>
 
           <!--Tabs-->
-          <TabControl Grid.Row="1" Classes="base" SelectedIndex="{Binding SelectedTabIndex}">
+          <views:HomeView IsVisible="{Binding IsHomePageVisible}"  DataContext="{Binding}"  Grid.Row="1"></views:HomeView>
+          <TabControl IsVisible="{Binding IsTabControlVisible}" Grid.Row="1" Classes="base" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Classes="base" Header="Songs">
               <views:SongTabItem DataContext="{Binding}"/>
             </TabItem>

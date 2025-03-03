@@ -33,6 +33,10 @@ namespace AvaloniaFirstApp.Models
                 waveOutEvent.Play();
             }
         }
+        public static void JumpTo(double time)
+        {
+            mp3FileReader.CurrentTime = TimeSpan.FromSeconds(time);
+        }
         public static void ChangeVolume(float volume)
         {
             if (waveOutEvent == null) return;

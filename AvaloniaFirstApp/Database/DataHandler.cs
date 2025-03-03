@@ -19,6 +19,38 @@ namespace AvaloniaFirstApp.Database
         {
             return await db.Accounts.FirstOrDefaultAsync(account => account.id == accountid);
         }
+        public async Task<List<Song>> TrendingSongs(int n)
+        {
+            return await db.Songs
+                .OrderBy(s => EF.Functions.Random())
+                .Take(n)
+                .Include(s => s.SongArtists)
+                .ThenInclude(sa => sa.Artist)
+                .ToListAsync();
+        }
+        public async Task<List<Artist>> TrendingArtists(int n)
+        {
+            return await db.Artists
+                .OrderBy(a => EF.Functions.Random()) // Random order
+                .Take(n)
+                .ToListAsync();
+        }
+        public async Task<List<Song>> SuggestedSongs(int n)
+        {
+            return await db.Songs
+                .OrderBy(s => EF.Functions.Random())
+                .Take(n)
+                .Include(s => s.SongArtists)
+                .ThenInclude(sa => sa.Artist)
+                .ToListAsync();
+        }
+        public async Task<List<Artist>> SuggestedArtists(int n)
+        {
+            return await db.Artists
+                .OrderBy(a => EF.Functions.Random())
+                .Take(n)
+                .ToListAsync();
+        }
         public async Task<List<Song>> SearchSongs(string searchterm)
         {
             return await db.Songs

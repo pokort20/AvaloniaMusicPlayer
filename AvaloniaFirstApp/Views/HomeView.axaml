@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:MainViewModel"
+             x:Class="AvaloniaFirstApp.Views.HomeView">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"></ColumnDefinition>
+      <ColumnDefinition Width="*"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+
+    <!--Trending-->
+    <Label Grid.Row="0" Grid.Column="0" Classes="baseH1">Trending</Label>
+    <Label Grid.Row="1" Grid.Column="0" Classes="baseH2">Songs</Label>
+    <Label Grid.Row="1" Grid.Column="1" Classes="baseH2">Artists</Label>
+    <ItemsControl Grid.Row="2" Grid.Column="0" ItemsSource="{Binding TrendingSongs}" VerticalAlignment="Center">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel VerticalAlignment="Center"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="song">
+            <Grid VerticalAlignment="Center">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"/>
+              <StackPanel Classes="leftV" Grid.Column="1">
+                <Label Classes="base" FontSize="16" Content="{Binding name}"/>
+                <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"/>
+              </StackPanel>
+              <Button Grid.Column="2" Classes="circle"
+                      Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                      CommandParameter="{Binding}">
+                <Image Source="/Assets/Images/play.png"/>
+              </Button>
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding TrendingArtists}" Padding="20">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="card" Height="180" Width="180">
+            <StackPanel Classes="baseV">
+              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+                      CommandParameter="{Binding}">
+                <Image Classes="cardImage" Width="120" Height="120"/>
+              </Button>
+              <Label Content="{Binding name}" Classes="Base" FontSize="16" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!--Suggested-->
+    <Label Grid.Row="3" Grid.Column="0" Classes="baseH1">Trending</Label>
+    <Label Grid.Row="4" Grid.Column="0" Classes="baseH2">Songs</Label>
+    <Label Grid.Row="4" Grid.Column="1" Classes="baseH2">Artists</Label>
+    <ItemsControl Grid.Row="5" Grid.Column="0" ItemsSource="{Binding SuggestedSongs}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel VerticalAlignment="Center"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="song">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+              <StackPanel Classes="leftV" Grid.Column="1">
+                <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+              </StackPanel>
+              <Button Grid.Column="2" Classes="circle"
+                      Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                      CommandParameter="{Binding}" >
+                <Image Source="/Assets/Images/play.png"></Image>
+              </Button>
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <ItemsControl Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SuggestedArtists}" Padding="20">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border Classes="card" Height="180" Width="180">
+            <StackPanel Classes="baseV">
+              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+                      CommandParameter="{Binding}">
+                <Image Classes="cardImage" Width="120" Height="120"/>
+              </Button>
+              <Label Content="{Binding name}" Classes="Base" FontSize="16" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
+</UserControl>
