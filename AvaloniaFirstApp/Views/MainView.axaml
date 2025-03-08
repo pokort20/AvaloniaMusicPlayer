@@ -148,8 +148,15 @@
             <!--Playlists-->
             <StackPanel Grid.Row="0">
               <Label Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
-              <ItemsControl Classes="base">
-                <Label Classes="base">Playlist</Label>
+              <ItemsControl Classes="base" ItemsSource="{Binding Playlists}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border>
+                      <Label Content="{Binding name}"></Label>
+                    </Border>
+                  </DataTemplate>
+
+                </ItemsControl.ItemTemplate>
               </ItemsControl>
             </StackPanel>
 
