@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AvaloniaFirstApp.Models.Relation
+namespace AvaloniaFirstApp.Models
 {
-    class AccountSong
+    public class AccountSong
     {
+        public int accountid { get; set; }
+        public Account Account { get; set; }
+
+        public int songid { get; set; }
+        public Song Song { get; set; }
     }
 }

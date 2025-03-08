@@ -19,6 +19,8 @@ using DynamicData.Kernel;
 using AvaloniaFirstApp.Support;
 using System.Reactive.Threading.Tasks;
 using System.Collections.Generic;
+using Avalonia.Threading;
+using System.Threading;
 
 namespace AvaloniaFirstApp.ViewModels;
 
@@ -39,6 +41,8 @@ public class MainViewModel : ViewModelBase
     private int _selectedTabIndex;
     private bool _isHomePageVisible;
     private bool _isTabControlVisible;
+    private double _minSongProgress;
+    private double _maxSongProgress;
 
     private readonly DataHandler dh;
     private SongQueue sq;
@@ -52,21 +56,36 @@ public class MainViewModel : ViewModelBase
     private Bitmap mutedImage;
     private Bitmap volumeLowImage;
     private Bitmap volumeHighImage;
+    private DispatcherTimer songTimer;
 
     #region Collections
+
+    #region CurrentPlayingCollections
     public ObservableCollection<Song> SongQueue { get; } = new ObservableCollection<Song>();
+    public ObservableCollection<Song> Suggestions { get; } = new ObservableCollection<Song>();
+    #endregion
+
+    #region AccountTiedCollections
     public ObservableCollection<Playlist> Playlists { get; } = new ObservableCollection<Playlist>();
     public ObservableCollection<Artist> Artists { get; } = new ObservableCollection<Artist>();
+    public ObservableCollection<Album> Albums { get; } = new ObservableCollection<Album>();
+    public ObservableCollection<Podcast> Podcasts { get; } = new ObservableCollection<Podcast>();
+    #endregion
+
+    #region SearchTiedCollections
     public ObservableCollection<Song> SearchSongs { get; } = new ObservableCollection<Song>();
     public ObservableCollection<Album> SearchAlbums { get; } = new ObservableCollection<Album>();
     public ObservableCollection<Artist> SearchArtists { get; } = new ObservableCollection<Artist>();
     public ObservableCollection<Podcast> SearchPodcasts { get; } = new ObservableCollection<Podcast>();
     public ObservableCollection<Playlist> SearchPlaylists { get; } = new ObservableCollection<Playlist>();
+    #endregion
+
+    #region HomeScreenCollections
     public ObservableCollection<Song> TrendingSongs { get; } = new ObservableCollection<Song>();
     public ObservableCollection<Artist> TrendingArtists { get; } = new ObservableCollection<Artist>();
     public ObservableCollection<Song> SuggestedSongs { get; } = new ObservableCollection<Song>();
     public ObservableCollection<Artist> SuggestedArtists { get; } = new ObservableCollection<Artist>();
-
+    #endregion
 
     #endregion
 
@@ -84,6 +103,9 @@ public class MainViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> NextCommand { get; }
     public ReactiveCommand<Unit, Unit> MuteCommand { get; }
     public ReactiveCommand<Unit, Unit> HomeCommand { get; }
+    public ReactiveCommand<Song, Unit> ContextAddToQueueCommand { get; }
+    public ReactiveCommand<Song, Unit> ContextAddToPlaylistCommand { get; }
+    public ReactiveCommand<Artist, Unit> ContextMakeFavouriteCommand { get; }
 
     public ReactiveCommand<PointerPressedEventArgs, Unit> OnSongBarClicked { get; }
 
@@ -92,9 +114,8 @@ public class MainViewModel : ViewModelBase
     {
         dh = new DataHandler();
         sq = new SongQueue();
-        
+
         InitVariables();
-        LoadUserAccountAsync();
 
         this.WhenAnyValue(x => x.SearchText)
             .Throttle(TimeSpan.FromMilliseconds(300))
@@ -127,12 +148,39 @@ public class MainViewModel : ViewModelBase
         RepeatCommand = ReactiveCommand.Create(RepeatCommandExecute);
         HomeCommand = ReactiveCommand.Create(HomeCommandExecute);
 
+        //Context
+        ContextAddToQueueCommand = ReactiveCommand.Create<Song>(ContextAddToQeueueExecute);
+        ContextAddToPlaylistCommand = ReactiveCommand.Create<Song>(ContextAddToPlaylistExecute);
+
         OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
 
+        LoadUserAccountDataAsync();
         InitHomePage();
+        InitSongTimer();
         Console.WriteLine("MainViewModel initialized!");
     }
     #region events
+    private void OnSongTimerTick(object? sender, EventArgs e)
+    {
+        if (isPlaying == false) return;
+
+        // Get the total duration of the song in seconds or milliseconds
+        double songDuration = AudioPlayer.GetTotalTime().TotalSeconds; // Convert TimeSpan to seconds
+        double currentTime = AudioPlayer.GetTimeElapsed().TotalSeconds; // Get the current playback time in seconds
+
+        // Check if the current time is less than the total song duration
+        if (currentTime < songDuration)
+        {
+            // Map the current song time to the slider value range (MinSongProgress to MaxSongProgress)
+            SongProgress = Utils.MapToRange(currentTime, 0, songDuration, MinSongProgress, MaxSongProgress);
+        }
+        else
+        {
+            // If the song is finished, set the progress to the max value
+            SongProgress = MaxSongProgress;
+            NextCommandExecute(); // Stop the timer when the song is over
+        }
+    }
 
     public void OnSliderScroll(PointerWheelEventArgs args)
     {
@@ -141,6 +189,16 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region executes
+    private void ContextAddToQeueueExecute(Song s)
+    {
+        sq.Add(s);
+        UpdateUIQueue();
+    }
+    private void ContextAddToPlaylistExecute(Song s)
+    {
+        //add to playlist
+        Debug.WriteLine("Add to playlist");
+    }
     private void HandleSongProgressClicked(PointerPressedEventArgs e)
     {
         var point = e.GetPosition(null); // Get the position relative to the window (or use the ProgressBar itself if needed)
@@ -153,13 +211,12 @@ public class MainViewModel : ViewModelBase
     {
         PlaySongCommandExecute(sq.Previous());
         UpdateUIQueue();
-        Debug.WriteLine("Play previous song");
     }
     private void NextCommandExecute()
     {
-        PlaySongCommandExecute(sq.Next());
+        PlaySongCommandExecute(sq.Next(repeat));
         UpdateUIQueue();
-        Debug.WriteLine("Play next song");
+        songTimer.Start();
     }
     private void ShuffleCommandExecute()
     {
@@ -222,23 +279,24 @@ public class MainViewModel : ViewModelBase
     }
     private void PlaySongCommandExecute(Song s)
     {
+        //this is the only place where music gets played from
         if (s == null) return;
         sq.CurrentPlayingSong = s;
         SongName = s.name;
         AuthorName = s.SongArtistsNames;
-        TimeLeft = s.duration.ToString(@"m\:ss");
-        TimeElapsed = s.duration.ToString(@"m\:ss");
 
         isPlaying = true;
         PlayPauseImage = pauseImage;
         AudioPlayer.Play();
         AudioPlayer.ChangeVolume((float)Utils.MapToRange(Volume, 0.0, 50.0, 0.0, 1.0));
-
+        SongProgress = MinSongProgress;
+        UpdateUIQueue();
         Debug.WriteLine("Playing song: " + s.name + ", made by:" + s.SongArtistsNames + ", duration: " + s.duration);
     }
     private void PlayAlbumCommandExecute(Album album)
     {
         // Code to handle playing the album
+        UpdateSuggestions();
         Debug.WriteLine("Playing: " + album.ToString());
     }
     private async Task PlayPlaylistCommandExecuteAsync(Playlist playlist)
@@ -250,6 +308,7 @@ public class MainViewModel : ViewModelBase
         }
         if (shuffle) sq.ShuffleQueue(includeCurrentPlayingSong: true);
         UpdateUIQueue();
+        UpdateSuggestions();
         PlaySongCommandExecute(sq.CurrentPlayingSong);
         Debug.WriteLine("Playing: " + playlist.ToString());
     }
@@ -262,6 +321,7 @@ public class MainViewModel : ViewModelBase
         }
         if (shuffle) sq.ShuffleQueue(includeCurrentPlayingSong: true);
         UpdateUIQueue();
+        UpdateSuggestions();
         PlaySongCommandExecute(sq.CurrentPlayingSong);
         Debug.WriteLine("Playing: " + artist.ToString());
     }
@@ -273,13 +333,38 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region properties
+    public double MinSongProgress
+    {
+        get => _minSongProgress;
+        set
+        {
+            if(_minSongProgress != value)
+            {
+                this.RaiseAndSetIfChanged(ref _minSongProgress, value);
+            }
+        }
+    }
+    public double MaxSongProgress
+    {
+        get => _maxSongProgress;
+        set
+        {
+            if (_maxSongProgress != value)
+            {
+                this.RaiseAndSetIfChanged(ref _maxSongProgress, value);
+            }
+        }
+    }
     public double SongProgress
     {
         get => _songProgress;
         set
         {
-            if(_songProgress != value)
+            if(_songProgress != value && AudioPlayer.IsInitiated())
             {
+                AudioPlayer.JumpTo(value);
+                TimeLeft = AudioPlayer.GetTimeLeft().ToString(@"m\:ss");
+                TimeElapsed = AudioPlayer.GetTimeElapsed().ToString(@"m\:ss");
                 this.RaiseAndSetIfChanged(ref _songProgress, value);
             }
         }
@@ -480,6 +565,14 @@ public class MainViewModel : ViewModelBase
             SongQueue.Add(s);
         }
     }
+    private async void UpdateSuggestions()
+    {
+        Suggestions.Clear();
+        foreach(Song s in await dh.SuggestedSongs(5))
+        {
+            Suggestions.Add(s);
+        }
+    }
     private async Task ShowSearchResults(string searchTerm)
     {
         try
@@ -529,17 +622,22 @@ public class MainViewModel : ViewModelBase
             Debug.WriteLine("An error occured, " + e.Message);
         }
     }
-    private async Task LoadUserAccountAsync()
+    private async void LoadUserAccountDataAsync()
     {
         try
         {
-            // Assuming you have some logic to get account id, here using a hardcoded account id for example
-            int accountId = 1;  // Replace with actual account ID logic
+            int accountId = 1;
 
             // Get the account asynchronously
             UserAccount = await dh.GetUserAccount(accountId);
             AccountName = UserAccount.username;
             Debug.WriteLine("Account:" + UserAccount);
+
+            Playlists.Clear();
+            foreach(Playlist p in await dh.GetFavouritePlaylists(UserAccount))
+            {
+                Playlists.Add(p);
+            }
         }
         catch (Exception ex)
         {
@@ -554,7 +652,17 @@ public class MainViewModel : ViewModelBase
         shuffle = false;
         repeat = false;
         SelectedTabIndex = 0;
+        MinSongProgress = 0.0;
+        MaxSongProgress = 100.0;
+
         Volume = 2;
+    }
+    private void InitSongTimer()
+    {
+        songTimer = new DispatcherTimer();
+        songTimer.Interval = TimeSpan.FromMilliseconds(1000);
+        songTimer.Tick += OnSongTimerTick;
+        songTimer.Start();
     }
     private void InitUIImages()
     {

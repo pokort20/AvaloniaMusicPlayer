@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AvaloniaFirstApp.Models
 {
-    public class AccountPodcast
+    public class AccountAlbum
     {
         public int accountid { get; set; }
         public Account Account { get; set; }
 
-        public int podcastid { get; set; }
-        public Podcast Podcast { get; set; }
+        public int albumid { get; set; }
+        public Album Album { get; set; }
     }
 }

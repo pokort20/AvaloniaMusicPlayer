@@ -14,4 +14,8 @@ public partial class MainView : UserControl
     {
         Debug.WriteLine("Pointer pressed, e: " + e.GetPosition((Avalonia.Visual)sender).ToString());
     }
+
+    private void Binding(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+    }
 }

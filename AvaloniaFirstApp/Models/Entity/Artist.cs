@@ -25,5 +25,6 @@ namespace AvaloniaFirstApp.Models
         public List<SongArtist> SongArtists { get; set; }
         public List<AlbumArtist> AlbumArtists { get; set; }
         public List<PodcastArtist> PodcastArtists { get; set; }
+        public List<AccountArtist> AccountArtists { get; set; }
     }
 }

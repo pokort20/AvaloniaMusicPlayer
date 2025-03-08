@@ -22,5 +22,11 @@ namespace AvaloniaFirstApp.Models
         public int id { get; set; }
         public string username { get; set; }
         public byte[] data { get; set; }
+
+        public List<AccountPlaylist> AccountPlaylists { get; set; }
+        public List<AccountArtist> AccountArtists { get; set; }
+        public List<AccountAlbum> AccountAlbums { get; set; }
+        public List<AccountPodcast> AccountPodcasts { get; set; }
+        public List<AccountSong> AccountSongs { get; set; }
     }
 }

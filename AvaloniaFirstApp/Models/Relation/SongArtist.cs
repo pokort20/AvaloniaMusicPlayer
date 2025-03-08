@@ -8,10 +8,10 @@ namespace AvaloniaFirstApp.Models
 {
     public class SongArtist
     {
-        public int songid { get; set; }  // Foreign key to Song
-        public Song Song { get; set; }  // Navigation property to Song
+        public int songid { get; set; } 
+        public Song Song { get; set; }  
 
-        public int artistid { get; set; }  // Foreign key to Artist
-        public Artist Artist { get; set; }  // Navigation property to Artist
+        public int artistid { get; set; }  
+        public Artist Artist { get; set; } 
     }
 }

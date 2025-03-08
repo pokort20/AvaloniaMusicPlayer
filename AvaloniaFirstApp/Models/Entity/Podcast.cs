@@ -25,5 +25,6 @@ namespace AvaloniaFirstApp.Models
         public byte[] data { get; set; }
 
         public List<PodcastArtist> PodcastArtists { get; set; }
+        public List<AccountPodcast> AccountPodcasts { get; set; }
     }
 }

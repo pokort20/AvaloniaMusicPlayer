@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace AvaloniaFirstApp.Database
         }
         public async Task<List<Song>> TrendingSongs(int n)
         {
+            Debug.WriteLine("TrendingSongs db access");
             return await db.Songs
                 .OrderBy(s => EF.Functions.Random())
                 .Take(n)
@@ -92,6 +94,7 @@ namespace AvaloniaFirstApp.Database
         //        .Where(p => p.name.Contains(searchterm))
         //        .ToListAsync();
         //}
+        
         public async Task<List<Podcast>> SearchPodcasts(string searchterm)
         {
             return await db.Podcasts
@@ -106,5 +109,50 @@ namespace AvaloniaFirstApp.Database
                 .Where(e => EF.Property<string>(e, "name").Contains(searchTerm))
                 .ToListAsync();
         }
+        public async Task<bool> AddToPlaylist(Song s, Playlist p)
+        {
+            Debug.WriteLine("Adding song " + s.name + " to playlist " + p.name);
+            return false;
+        }
+        public async Task<List<Playlist>> GetFavouritePlaylists(Account account)
+        {
+            Debug.WriteLine("favourite playlists db access");
+            return await db.Playlists
+                .Where(p => p.AccountPlaylists.Any(ap => ap.accountid == 1))
+                .ToListAsync();
+        }
+
+        //public async Task<List<T>> GetAccountFavourite<T>(Account account) where T : class
+        //{
+        //    string foreignKeyName = typeof(T) switch
+        //    {
+        //        var t when t == typeof(Playlist) => "accountid",
+        //        var t when t == typeof(Artist) => "accountid",
+        //        var t when t == typeof(Album) => "accountid",
+        //        var t when t == typeof(Podcast) => "accountid",
+        //        var t when t == typeof(Song) => "accountid",
+        //        _ => throw new ArgumentException("Unsupported entity type.")
+        //    };
+
+        //    return await db.Set<T>()
+        //        .Where(e => EF.Property<int>(e, foreignKeyName) == account.id)
+        //        .ToListAsync();
+        //}
+
+        //public async Task<List<T>> GetAccountFavourite<T>(Account account) where T : class
+        //{
+        //    return await db.Set<T>()
+        //        .Where(e => EF.Property<int>(e, "name").Contains(searchTerm))
+        //        .ToListAsync();
+        //}
+        //public async Task<List<Playlist>> GetPlaylistsForAccount(Account account)
+        //{
+        //    return await db.AccountPlaylists
+        //        .Where(ap => ap.accountid == account.id)
+        //        .Select(ap => ap.Playlist)
+        //        .ToListAsync();
+        //}
+
+
     }
 }

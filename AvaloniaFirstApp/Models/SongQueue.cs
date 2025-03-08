@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Internal;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,28 @@ namespace AvaloniaFirstApp.Models
     public class SongQueue
     {
         private Queue<Song> Queue { get; set; }
-        public Song? CurrentPlayingSong { get; set; }
+        private Song? _currentPlayingSong;
+        public Song? CurrentPlayingSong
+        {
+            get => _currentPlayingSong;
+            set
+            {
+                if(value != null && _currentPlayingSong != value)
+                {
+                    if(Queue.Contains(value))
+                    {
+                        Song tmp;
+                        do
+                        {
+                            tmp = Queue.Dequeue();
+                        }
+                        while (tmp != value);
+                    }
+                    _currentPlayingSong = value;
+                }
+            }
+        }
+
         private Stack<Song> PlayedSongs { get; set; }
         public SongQueue()
         {
@@ -60,15 +82,18 @@ namespace AvaloniaFirstApp.Models
                 CurrentPlayingSong = s;
                 return;
             }
-            Queue.Enqueue(s);
+            if(!Queue.Contains(s)) Queue.Enqueue(s);
         }
-        public Song? Next()
+        public Song? Next(bool repeat)
         {
             if (CurrentPlayingSong != null && Queue.Count > 0)
             {
-                Song s = Queue.Dequeue();
-                PlayedSongs.Push(CurrentPlayingSong);
-                CurrentPlayingSong = s;
+                if(!repeat)
+                {
+                    Song s = Queue.Dequeue();
+                    PlayedSongs.Push(CurrentPlayingSong);
+                    CurrentPlayingSong = s;
+                }
             }
             return CurrentPlayingSong;
         }

@@ -70,16 +70,16 @@
               <StackPanel Classes="leftH">
                 <Image Source="/Assets/avalonia-logo.ico"></Image>
                 <StackPanel Classes="leftV">
-                  <Label HorizontalAlignment="Left" Classes="base" FontSize="16" Content="{Binding SongName}"></Label>
-                  <Label Grid.Row="1" HorizontalAlignment="Left" Classes="base" Content="{Binding AuthorName}"></Label>
+                  <Label HorizontalAlignment="Left" Classes="base" Margin="0,18,0,-4" FontSize="20" Content="{Binding SongName}"></Label>
+                  <Label Grid.Row="1" HorizontalAlignment="Left" FontSize="13" Classes="base" Content="{Binding AuthorName}"></Label>
                 </StackPanel>
               </StackPanel>
               
               <!--Stack panel play controls-->
               <StackPanel Classes="baseH" Grid.Column="1">
-                <Button Classes="transparent" Command="{Binding ShuffleCommand}" Margin="0,0,20,0">
+                <ToggleButton Classes="transparent" Command="{Binding ShuffleCommand}" Margin="0,0,20,0">
                   <Image Width="25" Height=" 25" Source="/Assets/Images/shuffle.png"></Image>
-                </Button>
+                </ToggleButton>
                 <Button Classes="circle" Command="{Binding PreviousCommand}">
                   <Image Source="/Assets/Images/previous.png"></Image>
                 </Button>
@@ -89,9 +89,9 @@
                 <Button Classes="circle" Command="{Binding NextCommand}">
                   <Image Source="/Assets/Images/next.png"></Image>
                 </Button>
-                <Button Classes="transparent" Margin="20,0,0,0" Command="{Binding RepeatCommand}">
-                  <Image Width="20" Height="20" Source="/Assets/Images/repeat.png"></Image>
-                </Button>
+                <ToggleButton Classes="transparent" Command="{Binding RepeatCommand}" Margin="20,0,0,0">
+                  <Image Width="20" Height=" 20" Source="/Assets/Images/repeat.png"></Image>
+                </ToggleButton>
               </StackPanel>
               
               <!--Border volume-->
@@ -111,7 +111,7 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
               </Grid.ColumnDefinitions>
               <Label Classes="base" VerticalAlignment="Center" Margin="10,0,0,0" Width="40" Grid.Column="0" Content="{Binding TimeElapsed}"></Label>
-              <Slider Classes="song" Grid.Column="1" Value="{Binding SongProgress}"></Slider>
+              <Slider Classes="song" Grid.Column="1" Minimum="{Binding MinSongProgress}" Maximum="{Binding MaxSongProgress}" Value="{Binding SongProgress, Mode=TwoWay}"></Slider>
               <!--<ProgressBar x:Name="SongProgressBar" Grid.Column="1" Classes="base" Value="{Binding SongProgress}">
                 <i:Interaction.Behaviors>
                   <ia:EventTriggerBehavior EventName="PointerPressed"  SourceObject="{Binding #SongProgressBar}">
@@ -236,7 +236,7 @@
       <Border Classes="base" Grid.Column="2">
         <Grid>
           <Grid.RowDefinitions>
-            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
           </Grid.RowDefinitions>
           <Grid Grid.Row="0">
@@ -272,16 +272,6 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
             </ScrollViewer>
-            <!--<ItemsControl Grid.Row="1" ItemsSource="{Binding SongQueue}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <StackPanel Orientation="Horizontal">
-                    <Label Classes="base" Content="{Binding name}"></Label>
-                    <Label Classes="base" Content="{Binding id}"></Label>
-                  </StackPanel>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>-->
           </Grid>
 
           <Grid Grid.Row="1">
@@ -290,9 +280,50 @@
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Suggestions</Label>
-            <ItemsControl Grid.Row="1">
-              <Label Classes="base" HorizontalAlignment="Center">Suggested track 1</Label>
-            </ItemsControl>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+              <ItemsControl  ItemsSource="{Binding Suggestions}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border Classes="song">
+                      <Border.ContextMenu>
+                        <ContextMenu>
+                          <MenuItem Header="Add to queue" 
+                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToQueueCommand}" 
+                                    CommandParameter="{Binding}"/>
+                          <MenuItem Header="Add to playlist" 
+                                    ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SearchPlaylists}"
+                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                                    CommandParameter="{Binding}">
+                            <MenuItem.ItemTemplate>
+                              <DataTemplate>
+                                <MenuItem Header="{Binding name}" />
+                              </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                          </MenuItem>
+                        </ContextMenu>
+                      </Border.ContextMenu>
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          <ColumnDefinition Width="*"></ColumnDefinition>
+                          <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                        <StackPanel Classes="leftV" Grid.Column="1">
+                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                          <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+                        </StackPanel>
+                        <Button Grid.Column="2" Classes="circle"
+                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                                CommandParameter="{Binding}" >
+                          <Image Source="/Assets/Images/play.png"></Image>
+                        </Button>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
           </Grid>
 
         </Grid>
