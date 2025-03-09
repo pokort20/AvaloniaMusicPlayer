@@ -16,6 +16,13 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="card">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Add to favourites"
+                          Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).AddFavouriteCommand}"
+                          CommandParameter="{Binding}"/>
+              </ContextMenu>
+            </Border.ContextMenu>
             <StackPanel Classes="baseV">
               <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayAlbumCommand}"
                       CommandParameter="{Binding}">

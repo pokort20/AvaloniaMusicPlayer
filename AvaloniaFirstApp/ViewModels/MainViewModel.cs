@@ -43,6 +43,7 @@ public class MainViewModel : ViewModelBase
     private bool _isTabControlVisible;
     private double _minSongProgress;
     private double _maxSongProgress;
+    private Playlist _selectedPlaylist;
 
     private readonly DataHandler dh;
     private SongQueue sq;
@@ -107,6 +108,9 @@ public class MainViewModel : ViewModelBase
     public ReactiveCommand<Song, Unit> ContextAddToPlaylistCommand { get; }
     public ReactiveCommand<Artist, Unit> ContextMakeFavouriteCommand { get; }
 
+    public ReactiveCommand<object, Unit> AddFavouriteCommand { get; }
+    public ReactiveCommand<object, Unit> RemoveFavouriteCommand { get; }
+
     public ReactiveCommand<PointerPressedEventArgs, Unit> OnSongBarClicked { get; }
 
     #endregion
@@ -150,7 +154,9 @@ public class MainViewModel : ViewModelBase
 
         //Context
         ContextAddToQueueCommand = ReactiveCommand.Create<Song>(ContextAddToQeueueExecute);
-        ContextAddToPlaylistCommand = ReactiveCommand.Create<Song>(ContextAddToPlaylistExecute);
+        ContextAddToPlaylistCommand = ReactiveCommand.CreateFromTask<Song>(ContextAddToPlaylistExecute);
+        AddFavouriteCommand = ReactiveCommand.CreateFromTask<object>(AddFavouriteCommandExecute);
+        RemoveFavouriteCommand = ReactiveCommand.CreateFromTask<object>(RemoveFavouriteCommandExecute);
 
         OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
 
@@ -189,15 +195,29 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region executes
+    private async Task<bool> AddFavouriteCommandExecute(object o)
+    {
+        bool success = await dh.AddToFavourites(UserAccount, o);
+        if (success)
+        {
+            //update ui
+        }
+        return success;
+    }
+    private async Task<bool> RemoveFavouriteCommandExecute(object o)
+    {
+        return await dh.RemoveFromFavourites(UserAccount, o);
+    }
     private void ContextAddToQeueueExecute(Song s)
     {
         sq.Add(s);
         UpdateUIQueue();
     }
-    private void ContextAddToPlaylistExecute(Song s)
+    private async Task ContextAddToPlaylistExecute(Song s)
     {
         //add to playlist
-        Debug.WriteLine("Add to playlist");
+        Debug.WriteLine("Add " + s + " to " + SelectedPlaylist);
+        await dh.AddToPlaylist(s, SelectedPlaylist);
     }
     private void HandleSongProgressClicked(PointerPressedEventArgs e)
     {
@@ -333,6 +353,18 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region properties
+    public Playlist SelectedPlaylist
+    {
+        get => _selectedPlaylist;
+        set
+        {
+            if(_selectedPlaylist != value && value != null)
+            {
+                Debug.WriteLine(value);
+                this.RaiseAndSetIfChanged(ref _selectedPlaylist, value);
+            }
+        }
+    }
     public double MinSongProgress
     {
         get => _minSongProgress;
@@ -613,6 +645,12 @@ public class MainViewModel : ViewModelBase
                     break;
                 case 4:
                     //Podcasts
+                    SearchPodcasts.Clear();
+                    foreach (var x in await dh.SearchPodcasts(searchTerm))
+                    {
+                        SearchPodcasts.Add(x);
+                    }
+
                     break;
             }
 
@@ -634,9 +672,24 @@ public class MainViewModel : ViewModelBase
             Debug.WriteLine("Account:" + UserAccount);
 
             Playlists.Clear();
+            Artists.Clear();
+            Albums.Clear();
+            Podcasts.Clear();
             foreach(Playlist p in await dh.GetFavouritePlaylists(UserAccount))
             {
                 Playlists.Add(p);
+            }
+            foreach (Artist a in await dh.GetFavouriteArtists(UserAccount))
+            {
+                Artists.Add(a);
+            }
+            foreach (Album a in await dh.GetFavouriteAlbums(UserAccount))
+            {
+                Albums.Add(a);
+            }
+            foreach (Podcast p in await dh.GetFavouritePodcasts(UserAccount))
+            {
+                Podcasts.Add(p);
             }
         }
         catch (Exception ex)

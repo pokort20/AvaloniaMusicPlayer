@@ -5,17 +5,17 @@
              xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:MainViewModel"
-             x:Class="AvaloniaFirstApp.Views.ArtistTabItem">
+             x:Class="AvaloniaFirstApp.Views.PodcastTabItem">
   <ScrollViewer VerticalScrollBarVisibility="Auto">
-    <ItemsControl ItemsSource="{Binding SearchArtists}" Padding="20">
+    <ItemsControl ItemsSource="{Binding SearchPodcasts}" Padding="20">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel />
+          <StackPanel />
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <Border Classes="card">
+          <Border Classes="podcast">
             <Border.ContextMenu>
               <ContextMenu>
                 <MenuItem Header="Add to favourites"
@@ -24,12 +24,12 @@
               </ContextMenu>
             </Border.ContextMenu>
             <StackPanel Classes="baseV">
-              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPodcastCommand}"
                       CommandParameter="{Binding}">
                 <Image Classes="cardImage" Width="150" Height="150"/>
               </Button>
               <Label Content="{Binding name}" Classes="Base" FontSize="16" HorizontalAlignment="Center"/>
-              <Label Classes="Base" Content="" HorizontalAlignment="Center"/>
+              <Label Classes="Base" Content="{Binding description}" HorizontalAlignment="Center"/>
             </StackPanel>
           </Border>
         </DataTemplate>

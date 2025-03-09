@@ -16,7 +16,7 @@ namespace AvaloniaFirstApp.Database
             using var db = new DatabaseContext();
             return await db.Accounts.FirstOrDefaultAsync(account => account.id == accountid);
         }
-
+        #region trending
         public async Task<List<Song>> TrendingSongs(int n)
         {
             Debug.WriteLine("TrendingSongs db access");
@@ -37,7 +37,9 @@ namespace AvaloniaFirstApp.Database
                 .Take(n)
                 .ToListAsync();
         }
+        #endregion
 
+        #region suggested
         public async Task<List<Song>> SuggestedSongs(int n)
         {
             using var db = new DatabaseContext();
@@ -57,7 +59,9 @@ namespace AvaloniaFirstApp.Database
                 .Take(n)
                 .ToListAsync();
         }
+        #endregion
 
+        #region search
         public async Task<List<Song>> SearchSongs(string searchterm)
         {
             using var db = new DatabaseContext();
@@ -99,7 +103,6 @@ namespace AvaloniaFirstApp.Database
                 .ThenInclude(aa => aa.Artist)
                 .ToListAsync();
         }
-
         public async Task<List<Podcast>> SearchPodcasts(string searchterm)
         {
             using var db = new DatabaseContext();
@@ -117,10 +120,59 @@ namespace AvaloniaFirstApp.Database
                 .Where(e => EF.Property<string>(e, "name").Contains(searchTerm))
                 .ToListAsync();
         }
+        #endregion
 
-        public async Task<bool> AddToPlaylist(Song s, Playlist p)
+        #region favourite
+        public async Task<bool> AddToFavourites<T>(Account account, T item) where T : class
         {
-            Debug.WriteLine("Adding song " + s.name + " to playlist " + p.name);
+            using var db = new DatabaseContext();
+
+            bool isAlreadyFavourite = item switch
+            {
+                Artist artist => await db.Set<AccountArtist>().AnyAsync(aa => aa.accountid == account.id && aa.artistid == artist.id),
+                Album album => await db.Set<AccountAlbum>().AnyAsync(aa => aa.accountid == account.id && aa.albumid == album.id),
+                Podcast podcast => await db.Set<AccountPodcast>().AnyAsync(ap => ap.accountid == account.id && ap.podcastid == podcast.id),
+                _ => throw new ArgumentException($"Unsupported entity type: {typeof(T).Name}")
+            };
+
+            if (isAlreadyFavourite)
+            {
+                return false;
+            }
+
+            object relationEntry = item switch
+            {
+                Artist artist => new AccountArtist { accountid = account.id, artistid = artist.id },
+                Album album => new AccountAlbum { accountid = account.id, albumid = album.id },
+                Podcast podcast => new AccountPodcast { accountid = account.id, podcastid = podcast.id },
+                _ => throw new ArgumentException($"Unsupported entity type: {typeof(T).Name}")
+            };
+
+            db.Add(relationEntry);
+            await db.SaveChangesAsync();
+
+            return true; 
+        }
+
+        public async Task<bool> RemoveFromFavourites<T>(Account account, T item) where T : class
+        {
+            using var db = new DatabaseContext();
+
+            object relationEntry = item switch
+            {
+                Artist artist => await db.Set<AccountArtist>().FirstOrDefaultAsync(aa => aa.accountid == account.id && aa.artistid == (item as Artist).id),
+                Album album => await db.Set<AccountAlbum>().FirstOrDefaultAsync(aa => aa.accountid == account.id && aa.albumid == (item as Album).id),
+                Podcast podcast => await db.Set<AccountPodcast>().FirstOrDefaultAsync(ap => ap.accountid == account.id && ap.podcastid == (item as Podcast).id),
+                _ => throw new ArgumentException("Unsupported entity type.")
+            };
+
+            if (relationEntry != null)
+            {
+                db.Remove(relationEntry);
+                await db.SaveChangesAsync();
+                return true;
+            }
+
             return false;
         }
 
@@ -132,32 +184,58 @@ namespace AvaloniaFirstApp.Database
                 .Where(p => p.AccountPlaylists.Any(ap => ap.accountid == account.id))
                 .ToListAsync();
         }
+        public async Task<List<Artist>> GetFavouriteArtists(Account account)
+        {
+            Debug.WriteLine("favourite playlists db access");
+            using var db = new DatabaseContext();
+            return await db.Artists
+                .Where(a => a.AccountArtists.Any(aa => aa.accountid == account.id))
+                .ToListAsync();
+        }
+        public async Task<List<Album>> GetFavouriteAlbums(Account account)
+        {
+            Debug.WriteLine("Fetching favourite albums for account: " + account.id);
+            using var db = new DatabaseContext();
+            return await db.Albums
+                .Where(a => a.AccountAlbums.Any(aa => aa.accountid == account.id))
+                .Include(a => a.AlbumArtists)
+                    .ThenInclude(aa => aa.Artist)
+                .ToListAsync();
+        }
 
-        //public async Task<List<T>> GetAccountFavourite<T>(Account account) where T : class
-        //{
-        //    using var db = new DatabaseContext();
-        //    string foreignKeyName = typeof(T) switch
-        //    {
-        //        var t when t == typeof(Playlist) => "accountid",
-        //        var t when t == typeof(Artist) => "accountid",
-        //        var t when t == typeof(Album) => "accountid",
-        //        var t when t == typeof(Podcast) => "accountid",
-        //        var t when t == typeof(Song) => "accountid",
-        //        _ => throw new ArgumentException("Unsupported entity type.")
-        //    };
+        public async Task<List<Podcast>> GetFavouritePodcasts(Account account)
+        {
+            Debug.WriteLine("favourite playlists db access");
+            using var db = new DatabaseContext();
+            return await db.Podcasts
+                .Where(p => p.AccountPodcasts.Any(ap => ap.accountid == account.id))
+                .ToListAsync();
+        }
+        #endregion
 
-        //    return await db.Set<T>()
-        //        .Where(e => EF.Property<int>(e, foreignKeyName) == account.id)
-        //        .ToListAsync();
-        //}
+        public async Task<bool> AddToPlaylist(Song song, Playlist playlist)
+        {
+            using var db = new DatabaseContext();
 
-        //public async Task<List<Playlist>> GetPlaylistsForAccount(Account account)
-        //{
-        //    using var db = new DatabaseContext();
-        //    return await db.AccountPlaylists
-        //        .Where(ap => ap.accountid == account.id)
-        //        .Select(ap => ap.Playlist)
-        //        .ToListAsync();
-        //}
+            bool exists = await db.SongPlaylists
+                .AnyAsync(sp => sp.songid == song.id && sp.playlistid == playlist.id);
+
+            if (!exists)
+            {
+                var songPlaylist = new SongPlaylist
+                {
+                    songid = song.id,
+                    playlistid = playlist.id
+                };
+
+                db.SongPlaylists.Add(songPlaylist);
+                await db.SaveChangesAsync();
+                Debug.WriteLine($"Added song '{song.name}' to playlist '{playlist.name}'");
+                return true;
+            }
+
+            Debug.WriteLine($"Song '{song.name}' is already in playlist '{playlist.name}'");
+            return false;
+        }
     }
 }

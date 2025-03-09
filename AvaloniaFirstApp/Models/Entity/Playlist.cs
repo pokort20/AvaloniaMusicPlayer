@@ -25,5 +25,9 @@ namespace AvaloniaFirstApp.Models
         public List<SongPlaylist> SongPlaylists { get; set; }
         public List<AccountPlaylist> AccountPlaylists { get; set; }
 
+        public override string ToString()
+        {
+            return "Playlist: " + name;
+        }
     }
 }

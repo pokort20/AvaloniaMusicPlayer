@@ -46,7 +46,7 @@ namespace AvaloniaFirstApp.Models
         }
         public override string ToString()
         {
-            return name;
+            return "Song: " + name;
         }
     }
 }
