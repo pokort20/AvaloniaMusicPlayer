@@ -145,7 +145,14 @@
             <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Your music</Label>
             
             <!--Playlists-->
-            <Label Grid.Row="1" Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
+            <DockPanel Grid.Row="1">
+              <Label DockPanel.Dock="Left" Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
+              <Button DockPanel.Dock="Right" Classes="transparent" 
+                      Command="{Binding AddPlaylistCommand}"
+                      CommandParameter="{Binding $parent[Window]}">
+                <Image Source="avares://AvaloniaFirstApp/Assets/Images/account.png"></Image>
+              </Button>
+            </DockPanel>
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
               <ItemsControl  ItemsSource="{Binding Playlists}">
                 <ItemsControl.ItemTemplate>
@@ -361,6 +368,27 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
                     <Border Classes="song">
+                      <Border.ContextMenu>
+                        <ContextMenu>
+                          <MenuItem Header="Remove from queue"
+                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextRemoveFromQueueCommand}"
+                                    CommandParameter="{Binding}"/>
+                          <MenuItem Header="Add to playlist"
+                                    ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
+                                    SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                                    CommandParameter="{Binding }"
+                                    >
+                            <MenuItem.ItemTemplate>
+                              <DataTemplate>
+                                <Border>
+                                  <MenuItem Header="{Binding name}"/>
+                                </Border>
+                              </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                          </MenuItem>
+                        </ContextMenu>
+                      </Border.ContextMenu>
                       <Grid>
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition Width="Auto"></ColumnDefinition>

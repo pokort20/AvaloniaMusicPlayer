@@ -33,6 +33,27 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="song">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Add to queue"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).ContextAddToQueueCommand}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="Add to playlist"
+                          ItemsSource="{Binding $parent[Grid].((vm:MainViewModel)DataContext).Playlists}"
+                          SelectedItem="{Binding $parent[Grid].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                          CommandParameter="{Binding }"
+                                    >
+                  <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                      <Border>
+                        <MenuItem Header="{Binding name}"/>
+                      </Border>
+                    </DataTemplate>
+                  </MenuItem.ItemTemplate>
+                </MenuItem>
+              </ContextMenu>
+            </Border.ContextMenu>
             <Grid VerticalAlignment="Center">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -64,8 +85,15 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="card" Height="180" Width="180">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Add to favourites"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).AddFavouriteCommand}"
+                          CommandParameter="{Binding}"/>
+              </ContextMenu>
+            </Border.ContextMenu>
             <StackPanel Classes="baseV">
-              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+              <Button Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).PlayArtistCommand}"
                       CommandParameter="{Binding}">
                 <Image Classes="cardImage" Width="120" Height="120"/>
               </Button>
@@ -89,6 +117,27 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="song">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Add to queue"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).ContextAddToQueueCommand}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="Add to playlist"
+                          ItemsSource="{Binding $parent[Grid].((vm:MainViewModel)DataContext).Playlists}"
+                          SelectedItem="{Binding $parent[Grid].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                          CommandParameter="{Binding }"
+                                    >
+                  <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                      <Border>
+                        <MenuItem Header="{Binding name}"/>
+                      </Border>
+                    </DataTemplate>
+                  </MenuItem.ItemTemplate>
+                </MenuItem>
+              </ContextMenu>
+            </Border.ContextMenu>
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -101,7 +150,7 @@
                 <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
               </StackPanel>
               <Button Grid.Column="2" Classes="circle"
-                      Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                      Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).PlaySongCommand}"
                       CommandParameter="{Binding}" >
                 <Image Source="/Assets/Images/play.png"></Image>
               </Button>
@@ -119,8 +168,15 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="card" Height="180" Width="180">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Add to favourites"
+                          Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).AddFavouriteCommand}"
+                          CommandParameter="{Binding}"/>
+              </ContextMenu>
+            </Border.ContextMenu>
             <StackPanel Classes="baseV">
-              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+              <Button Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).PlayArtistCommand}"
                       CommandParameter="{Binding}">
                 <Image Classes="cardImage" Width="120" Height="120"/>
               </Button>

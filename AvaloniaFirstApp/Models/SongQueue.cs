@@ -84,6 +84,13 @@ namespace AvaloniaFirstApp.Models
             }
             if(!Queue.Contains(s)) Queue.Enqueue(s);
         }
+        public void Remove(Song s)
+        {
+            if (Queue.Contains(s))
+            {
+                Queue = new Queue<Song>(Queue.Where(song => song != s));
+            }
+        }
         public Song? Next(bool repeat)
         {
             if (CurrentPlayingSong != null && Queue.Count > 0)

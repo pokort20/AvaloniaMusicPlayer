@@ -21,6 +21,8 @@ using System.Reactive.Threading.Tasks;
 using System.Collections.Generic;
 using Avalonia.Threading;
 using System.Threading;
+using AvaloniaFirstApp.Views;
+using Avalonia.Controls;
 
 namespace AvaloniaFirstApp.ViewModels;
 
@@ -105,8 +107,10 @@ public class MainViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> MuteCommand { get; }
     public ReactiveCommand<Unit, Unit> HomeCommand { get; }
     public ReactiveCommand<Song, Unit> ContextAddToQueueCommand { get; }
+    public ReactiveCommand<Song, Unit> ContextRemoveFromQueueCommand { get; }
     public ReactiveCommand<Song, Unit> ContextAddToPlaylistCommand { get; }
     public ReactiveCommand<Artist, Unit> ContextMakeFavouriteCommand { get; }
+    public ReactiveCommand<Window, Unit> AddPlaylistCommand { get; }
 
     public ReactiveCommand<object, Unit> AddFavouriteCommand { get; }
     public ReactiveCommand<object, Unit> RemoveFavouriteCommand { get; }
@@ -154,10 +158,13 @@ public class MainViewModel : ViewModelBase
 
         //Context
         ContextAddToQueueCommand = ReactiveCommand.Create<Song>(ContextAddToQeueueExecute);
+        ContextRemoveFromQueueCommand = ReactiveCommand.Create<Song>(ContextRemoveFromQueueExecute);
         ContextAddToPlaylistCommand = ReactiveCommand.CreateFromTask<Song>(ContextAddToPlaylistExecute);
         AddFavouriteCommand = ReactiveCommand.CreateFromTask<object>(AddFavouriteCommandExecute);
         RemoveFavouriteCommand = ReactiveCommand.CreateFromTask<object>(RemoveFavouriteCommandExecute);
 
+
+        AddPlaylistCommand = ReactiveCommand.CreateFromTask<Window>(AddPlaylistCommandExecute);
         OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
 
         LoadUserAccountDataAsync();
@@ -195,23 +202,75 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region executes
+    private async Task AddPlaylistCommandExecute(Window parentWindow)
+    {
+        Debug.WriteLine("Add playlist");
+        //var modalWindow = new AddPlaylistWindow
+        //{
+        //    DataContext = new AddPlaylistViewModel(() => modalWindow.Close())
+        //};
+        AddPlaylistWindow apw = new AddPlaylistWindow();
+        apw.DataContext = new AddPlaylistViewModel(() => apw.Close());
+        await apw.ShowDialog(parentWindow); // Shows modal
+
+    }
     private async Task<bool> AddFavouriteCommandExecute(object o)
     {
         bool success = await dh.AddToFavourites(UserAccount, o);
         if (success)
         {
             //update ui
+            switch (o)
+            {
+                case Artist artist:
+                    Artists.Add(artist);
+                    break;
+                case Album album:
+                    Albums.Add(album);
+                    break;
+                case Podcast podcast:
+                    Podcasts.Add(podcast);
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported entity type.");
+            }
+
         }
         return success;
     }
     private async Task<bool> RemoveFavouriteCommandExecute(object o)
     {
-        return await dh.RemoveFromFavourites(UserAccount, o);
+        bool success = await dh.RemoveFromFavourites(UserAccount, o);
+
+        if (success)
+        {
+            switch (o)
+            {
+                case Artist artist:
+                    Artists.Remove(artist);
+                    break;
+                case Album album:
+                    Albums.Remove(album);
+                    break;
+                case Podcast podcast:
+                    Podcasts.Remove(podcast);
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported entity type.");
+            }
+        }
+        return success;
     }
+
     private void ContextAddToQeueueExecute(Song s)
     {
         sq.Add(s);
-        UpdateUIQueue();
+        SongQueue.Add(s);
+    }
+    private void ContextRemoveFromQueueExecute(Song s)
+    {
+        sq.Remove(s);
+        SongQueue.Remove(s);
     }
     private async Task ContextAddToPlaylistExecute(Song s)
     {
