@@ -19,7 +19,7 @@ namespace AvaloniaFirstApp.Models
             get => _currentPlayingSong;
             set
             {
-                if(value != null && _currentPlayingSong != value)
+                if(_currentPlayingSong != value)
                 {
                     if(Queue.Contains(value))
                     {

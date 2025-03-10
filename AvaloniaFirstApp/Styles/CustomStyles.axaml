@@ -14,10 +14,12 @@
     <Setter Property="Width" Value="40"></Setter>
     <Setter Property="Margin" Value="2"></Setter>
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
-    <Setter Property="Background" Value="Transparent"></Setter>
-    
+    <Setter Property="Background" Value="{DynamicResource ElementBG}"></Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ElementHover}"></Setter>
+    </Style>
     <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource SecondaryBG}"></Setter>
+      <Setter Property="Background" Value="{DynamicResource PrimaryElement}"></Setter>
     </Style>
   </Style>
   <!--<Style Selector="ToggleButton.transparent:checked /template/ B">
@@ -31,20 +33,25 @@
     <Setter Property="Width" Value="200"></Setter>
     <Setter Property="Padding" Value="0"></Setter>
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ElementHover}"></Setter>
+    </Style>
   </Style>
   
   <Style Selector="Button.circle">
+    <Setter Property="Background" Value="{DynamicResource ElementBG}"></Setter>
     <Setter Property="CornerRadius" Value="45"></Setter>
     <Setter Property="Height" Value="40"></Setter>
     <Setter Property="Width" Value="40"></Setter>
     <Setter Property="Margin" Value="2"></Setter>
-    <Setter Property="BorderThickness" Value="2"></Setter>
+    <Setter Property="BorderThickness" Value="3"></Setter>
     <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
     <Setter Property="VerticalAlignment" Value="Center"></Setter>
-  </Style>
-  <Style Selector="Button.circle:pointerover /template/ ContentPresenter">
-    <Setter Property="BorderThickness" Value="2"></Setter>
-    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
+
+    <Style Selector="^:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ElementHover}"></Setter>
+      <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+    </Style>
   </Style>
 
   <Style Selector="Button.transparent">
@@ -52,7 +59,10 @@
     <Setter Property="Height" Value="40"></Setter>
     <Setter Property="Width" Value="40"></Setter>
     <Setter Property="Margin" Value="2"></Setter>
-    <Setter Property="Background" Value="Transparent"></Setter>
+    <Setter Property="Background" Value="{DynamicResource ElementBG}"></Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource ElementHover}"></Setter>
+    </Style>
   </Style> 
   
   <!--Image styles-->
@@ -100,13 +110,13 @@
     <Setter Property="CaretBrush" Value="{DynamicResource PrimaryFont}"></Setter>
     <Setter Property="BorderThickness" Value="3"></Setter>
     <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
     <Setter Property="FontSize" Value="20"></Setter>
   </Style>
   <Style Selector="TextBox.base:focus-within /template/ Border">
     <Setter Property="Background" Value="{DynamicResource TernaryBG}"></Setter>
     <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryElement}"></Setter>
   </Style>
   <Style Selector="TextBox.base:pointerover /template/ Border">
     <Setter Property="Background" Value="{DynamicResource TernaryBG}"></Setter>

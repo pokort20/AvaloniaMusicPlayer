@@ -14,17 +14,57 @@
   <Application.Resources>
     <supp:PlaylistCommandParameterConverter x:Key="PlaylistCommandParameterConverter"/>
     
-    <SolidColorBrush x:Key="PrimaryBG">#857C8D</SolidColorBrush>
+    <!--<SolidColorBrush x:Key="PrimaryBG">#857C8D</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryBG">#766785</SolidColorBrush>
     <SolidColorBrush x:Key="TernaryBG">#AFABB3</SolidColorBrush>
     <SolidColorBrush x:Key="PrimaryElement">#180042</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryElement">#28006C</SolidColorBrush>
     <SolidColorBrush x:Key="PrimaryFont">#28006C</SolidColorBrush>
-    <SolidColorBrush x:Key="SecondaryFont">#555282</SolidColorBrush>
-    <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="50%,100%">
+    <SolidColorBrush x:Key="SecondaryFont">#555282</SolidColorBrush>-->
+    <!--<LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="50%,100%">
       <GradientStop Color="#766785" Offset="1.0"></GradientStop>
       <GradientStop Color="#857C8D" Offset="0.5"></GradientStop>
       <GradientStop Color="#766785" Offset="1.0"></GradientStop>
+    </LinearGradientBrush>-->
+
+    <SolidColorBrush x:Key="PrimaryBG">#5A5855</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryBG">#252325</SolidColorBrush>
+    <SolidColorBrush x:Key="TernaryBG">#394245</SolidColorBrush>
+    <SolidColorBrush x:Key="ElementBG">#7B736A</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryElement">#1C7998</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryElement">#299A9A</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryFont">#C2E4E9</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryFont">#19647E</SolidColorBrush>
+    <SolidColorBrush x:Key="ElementHover">#918980</SolidColorBrush>
+
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#333131" Offset="0.0"/>
+      <!-- Darker at the edges -->
+      <GradientStop Color="#393838" Offset="0.5"/>
+      <!-- Bright area extended -->
+      <GradientStop Color="#333131" Offset="1.0"/>
+      <!-- Darker at the other edge -->
     </LinearGradientBrush>
+
+
+    <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="50%,100%">
+      <!--<GradientStop Color="#394245" Offset="1.0"></GradientStop>-->
+      <GradientStop Color="#265565" Offset="0.0"></GradientStop>
+      <GradientStop Color="#394245" Offset="1.0"></GradientStop>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PrimaryGradientHover" StartPoint="0%,0%" EndPoint="50%,100%">
+      <!--<GradientStop Color="#0C090D" Offset="1.0"></GradientStop>-->
+      <GradientStop Color="#306171" Offset="0.0"></GradientStop>
+      <GradientStop Color="#495256" Offset="1.0"></GradientStop>
+    </LinearGradientBrush>
+
+
+    <!--<RadialGradientBrush x:Key="BackgroundGradient" Center="0.5,0.5" Radius="0.5">
+      <GradientStop Color="#4A3F33" Offset="0.0"/>
+      --><!-- Brightest in the center --><!--
+      <GradientStop Color="#0C090D" Offset="1.0"/>
+      --><!-- Darker on the edges --><!--
+    </RadialGradientBrush>-->
+
   </Application.Resources>
 </Application>

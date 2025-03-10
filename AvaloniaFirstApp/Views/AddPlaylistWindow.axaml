@@ -2,24 +2,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
         x:Class="AvaloniaFirstApp.Views.AddPlaylistWindow"
-        Title="AddPlaylistWindow">
-  <Border>
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"></RowDefinition>
-        <RowDefinition Height="Auto"></RowDefinition>
-        <RowDefinition Height="Auto"></RowDefinition>
-        <RowDefinition Height="Auto"></RowDefinition>
-      </Grid.RowDefinitions>
-      <Label Classes="baseH1" Grid.Row="0" Content="Add new playlist"></Label>
-      <Label Classes="baseH3" Grid.Row="1" Content="Playlist name"></Label>
-      <TextBox Classes="base" Grid.Row="2"></TextBox>
-      <Button Grid.Row="3" Classes="round">
+        x:DataType="vm:AddPlaylistViewModel"
+        Title="AddPlaylistWindow"
+        Width="400" Height="300"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="0">
+  <Border Classes="base">
+    <StackPanel Classes="baseV">
+      <Label Classes="baseH1" Margin="0,20,0,30" HorizontalAlignment="Center" Content="Add new playlist"></Label>
+      <Label Classes="baseH2" FontSize="18" Content="Playlist name"></Label>
+      <TextBox Classes="base" Width="300" Text="{Binding PlaylistName}"></TextBox>
+      <Button Grid.Row="3" Command="{Binding AddPlaylistCommand}" Classes="round" Width="250" HorizontalAlignment="Center" Margin="0,20,0,10">
         <Label Classes="baseH2" Content="Add playlist" HorizontalAlignment="Center"></Label>
       </Button>
-      
-    </Grid>
+    </StackPanel>
   </Border>
 </Window>

@@ -237,5 +237,59 @@ namespace AvaloniaFirstApp.Database
             Debug.WriteLine($"Song '{song.name}' is already in playlist '{playlist.name}'");
             return false;
         }
+        public async Task<bool> AddPlaylist(Account account, Playlist playlist)
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                db.Playlists.Add(playlist);
+                await db.SaveChangesAsync(); // Save to get the generated playlist ID
+
+                // Create the relation in account_playlist
+                var accountPlaylist = new AccountPlaylist
+                {
+                    accountid = account.id,
+                    playlistid = playlist.id
+                };
+
+                db.AccountPlaylists.Add(accountPlaylist);
+                await db.SaveChangesAsync(); // Save relation
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error adding playlist: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task<bool> DeletePlaylist(Account account, Playlist playlist)
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                var accountPlaylist = await db.AccountPlaylists
+                    .FirstOrDefaultAsync(ap => ap.accountid == account.id && ap.playlistid == playlist.id);
+
+                if (accountPlaylist != null)
+                {
+                    db.AccountPlaylists.Remove(accountPlaylist);
+                }
+
+                var existingPlaylist = await db.Playlists.FirstOrDefaultAsync(p => p.id == playlist.id);
+                if (existingPlaylist != null)
+                {
+                    db.Playlists.Remove(existingPlaylist);
+                }
+
+                await db.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error deleting playlist: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

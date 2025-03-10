@@ -16,7 +16,7 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
-  <Grid Background="{DynamicResource SecondaryBG}">
+  <Grid Background="{DynamicResource TernaryBG}">
       <Grid.RowDefinitions>
         <RowDefinition Height="100"></RowDefinition>
         <RowDefinition Height="*"></RowDefinition>
@@ -150,7 +150,7 @@
               <Button DockPanel.Dock="Right" Classes="transparent" 
                       Command="{Binding AddPlaylistCommand}"
                       CommandParameter="{Binding $parent[Window]}">
-                <Image Source="avares://AvaloniaFirstApp/Assets/Images/account.png"></Image>
+                <Image Source="avares://AvaloniaFirstApp/Assets/Images/plus.png"></Image>
               </Button>
             </DockPanel>
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
@@ -160,8 +160,8 @@
                     <Border Classes="song">
                       <Border.ContextMenu>
                         <ContextMenu>
-                          <MenuItem Header="Remove from favourites"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
+                          <MenuItem Header="Delete playlist"
+                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).DeletePlaylistCommand}"
                                     CommandParameter="{Binding}"/>
                         </ContextMenu>
                       </Border.ContextMenu>

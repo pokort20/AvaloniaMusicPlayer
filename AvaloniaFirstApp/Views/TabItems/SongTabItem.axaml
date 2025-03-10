@@ -11,6 +11,27 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Border Classes="song">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Remove from queue"
+                          Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextRemoveFromQueueCommand}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="Add to playlist"
+                          ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
+                          SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                          Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                          CommandParameter="{Binding }"
+                                    >
+                  <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                      <Border>
+                        <MenuItem Header="{Binding name}"/>
+                      </Border>
+                    </DataTemplate>
+                  </MenuItem.ItemTemplate>
+                </MenuItem>
+              </ContextMenu>
+            </Border.ContextMenu>
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"></ColumnDefinition>

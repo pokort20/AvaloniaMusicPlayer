@@ -111,6 +111,7 @@ public class MainViewModel : ViewModelBase
     public ReactiveCommand<Song, Unit> ContextAddToPlaylistCommand { get; }
     public ReactiveCommand<Artist, Unit> ContextMakeFavouriteCommand { get; }
     public ReactiveCommand<Window, Unit> AddPlaylistCommand { get; }
+    public ReactiveCommand<Playlist, Unit> DeletePlaylistCommand { get; }
 
     public ReactiveCommand<object, Unit> AddFavouriteCommand { get; }
     public ReactiveCommand<object, Unit> RemoveFavouriteCommand { get; }
@@ -165,6 +166,7 @@ public class MainViewModel : ViewModelBase
 
 
         AddPlaylistCommand = ReactiveCommand.CreateFromTask<Window>(AddPlaylistCommandExecute);
+        DeletePlaylistCommand = ReactiveCommand.CreateFromTask<Playlist>(DeletePlaylistCommandExecute);
         OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
 
         LoadUserAccountDataAsync();
@@ -205,14 +207,27 @@ public class MainViewModel : ViewModelBase
     private async Task AddPlaylistCommandExecute(Window parentWindow)
     {
         Debug.WriteLine("Add playlist");
-        //var modalWindow = new AddPlaylistWindow
-        //{
-        //    DataContext = new AddPlaylistViewModel(() => modalWindow.Close())
-        //};
         AddPlaylistWindow apw = new AddPlaylistWindow();
-        apw.DataContext = new AddPlaylistViewModel(() => apw.Close());
-        await apw.ShowDialog(parentWindow); // Shows modal
-
+        var tcs = new TaskCompletionSource<Playlist?>();
+        apw.DataContext = new AddPlaylistViewModel(dh, UserAccount, playlist =>
+        {
+            tcs.SetResult(playlist); // Set result when closed
+            apw.Close();
+        });
+        await apw.ShowDialog(parentWindow);
+        Playlist newPlaylist = await tcs.Task;
+        if (newPlaylist != null)
+        {
+            Playlists.Add(newPlaylist);
+        }
+    }
+    private async Task DeletePlaylistCommandExecute(Playlist playlist)
+    {
+        Debug.WriteLine("Delete playlist");
+        if(await dh.DeletePlaylist(UserAccount, playlist))
+        {
+            Playlists.Remove(playlist);
+        }
     }
     private async Task<bool> AddFavouriteCommandExecute(object o)
     {

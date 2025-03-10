@@ -12,18 +12,37 @@
     <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
     <Setter Property="Padding" Value="2"></Setter>
     <Setter Property="Margin" Value="10,2,10,2"></Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PrimaryGradientHover}"></Setter>
+      <Setter Property="RenderTransform">
+        <Setter.Value>
+          <ScaleTransform ScaleX="1.01" ScaleY="1.05"></ScaleTransform>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </Style>
-  <Style Selector="Border.song:pointerover">
-    <Setter Property="CornerRadius" Value="10"></Setter>
+  <!--Card style-->
+  <Style Selector="Border.card">
+    <Setter Property="Opacity" Value="1"/>
+    <Setter Property="Width" Value="250"></Setter>
+    <Setter Property="Height" Value="250"></Setter>
+    <Setter Property="CornerRadius" Value="15"></Setter>
     <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
     <Setter Property="Padding" Value="2"></Setter>
-    <Setter Property="Margin" Value="10,2,10,2"></Setter>
-    <Setter Property="RenderTransform">
-      <Setter.Value>
-        <ScaleTransform ScaleX="1.01" ScaleY="1.05"></ScaleTransform>
-      </Setter.Value>
-    </Setter>
+    <Setter Property="Margin" Value="10"></Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="CornerRadius" Value="20"></Setter>
+      <Setter Property="Background" Value="{DynamicResource PrimaryGradientHover}"></Setter>
+      <Setter Property="Padding" Value="5"></Setter>
+      <Setter Property="RenderTransform">
+        <Setter.Value>
+          <ScaleTransform ScaleX="1.05" ScaleY="1.05"></ScaleTransform>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </Style>
+
+  
   <Style Selector="Border.playlist">
     <Setter Property="CornerRadius" Value="10"></Setter>
     <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
@@ -50,42 +69,11 @@
     <Setter Property="Padding" Value="2"></Setter>
     <Setter Property="Margin" Value="10"></Setter>
   </Style>
-  <Style Selector="Border.card:pointerover">
-    <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
-    <Setter Property="Padding" Value="5"></Setter>
-    <Setter Property="Margin" Value="10"></Setter>
-    <Setter Property="RenderTransform">
-      <Setter.Value>
-        <ScaleTransform ScaleX="1.05" ScaleY="1.05"></ScaleTransform>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <!--Card style-->
-  <Style Selector="Border.card">
-    <Setter Property="Opacity" Value="1"/>
-    <Setter Property="Width" Value="250"></Setter>
-    <Setter Property="Height" Value="250"></Setter>
-    <Setter Property="CornerRadius" Value="5"></Setter>
-    <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
-    <Setter Property="Padding" Value="2"></Setter>
-    <Setter Property="Margin" Value="10"></Setter>
-  </Style>
-  <Style Selector="Border.card:pointerover">
-    <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="Background" Value="{DynamicResource PrimaryGradient}"></Setter>
-    <Setter Property="Padding" Value="5"></Setter>
-    <Setter Property="Margin" Value="10"></Setter>
-    <Setter Property="RenderTransform">
-      <Setter.Value>
-        <ScaleTransform ScaleX="1.05" ScaleY="1.05"></ScaleTransform>
-      </Setter.Value>
-    </Setter>
-  </Style>
+  
   
   <Style Selector="Border.base">
     <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
+    <Setter Property="Background" Value="{DynamicResource BackgroundGradient}"></Setter>
     <Setter Property="Padding" Value="2"></Setter>
     <Setter Property="Margin" Value="2"></Setter>
   </Style>

@@ -105,7 +105,7 @@
     </ItemsControl>
 
     <!--Suggested-->
-    <Label Grid.Row="3" Grid.Column="0" Classes="baseH1">Trending</Label>
+    <Label Grid.Row="3" Grid.Column="0" Classes="baseH1">Suggested</Label>
     <Label Grid.Row="4" Grid.Column="0" Classes="baseH2">Songs</Label>
     <Label Grid.Row="4" Grid.Column="1" Classes="baseH2">Artists</Label>
     <ItemsControl Grid.Row="5" Grid.Column="0" ItemsSource="{Binding SuggestedSongs}">
@@ -150,9 +150,9 @@
                 <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
               </StackPanel>
               <Button Grid.Column="2" Classes="circle"
-                      Command="{Binding $parent[Grid].((vm:MainViewModel)DataContext).PlaySongCommand}"
-                      CommandParameter="{Binding}" >
-                <Image Source="/Assets/Images/play.png"></Image>
+                      Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                      CommandParameter="{Binding}">
+                <Image Source="/Assets/Images/play.png"/>
               </Button>
             </Grid>
           </Border>
