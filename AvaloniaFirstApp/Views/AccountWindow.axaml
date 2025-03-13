@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AvaloniaFirstApp.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        x:Class="AvaloniaFirstApp.Views.AccountWindow"
+        x:DataType="vm:AccountWindowViewModel"
+        Title="AddPlaylistWindow"
+        Width="400" Height="300"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="0">
+  <Border Classes="base">
+    <StackPanel Classes="baseV">
+      <Label Classes="baseH1" Margin="0,20,0,30" HorizontalAlignment="Center" Content="Account"></Label>
+      <Label Classes="baseH2" FontSize="18" Content="Playlist name"></Label>
+      <TextBox Classes="base" Width="300" Text="{Binding }"></TextBox>
+      <Button Grid.Row="3" Command="{Binding }" Classes="round" Width="250" HorizontalAlignment="Center" Margin="0,20,0,10">
+        <Label Classes="baseH2" Content="Add playlist" HorizontalAlignment="Center"></Label>
+      </Button>
+    </StackPanel>
+  </Border>
+</Window>
