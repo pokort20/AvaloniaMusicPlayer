@@ -32,7 +32,7 @@ namespace AvaloniaFirstApp.ViewModels
         {
             Playlist newPlaylist = new Playlist();
             newPlaylist.name = PlaylistName;
-            newPlaylist.data = new byte[1];
+            newPlaylist.icon = new byte[1];
             bool success = await dh.AddPlaylist(account, newPlaylist);
             if (success)
             {

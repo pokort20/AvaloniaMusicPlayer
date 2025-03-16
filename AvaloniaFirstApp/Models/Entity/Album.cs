@@ -13,16 +13,16 @@ namespace AvaloniaFirstApp.Models
         {
             //empty constructor
         }
-        public Album(int id, string name, byte[] data, int year)
+        public Album(int id, string name, byte[] icon, int year)
         {
             this.id = id;
             this.name = name;
-            this.data = data;
+            this.icon = icon;
             this.year = year;
         }
         public int id { get; set; }
         public string name { get; set; }
-        public byte[] data { get; set; }
+        public byte[] icon { get; set; }
         public int year { get; set; }
 
         public List<AlbumArtist> AlbumArtists { get; set; }

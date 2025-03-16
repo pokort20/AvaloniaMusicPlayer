@@ -13,15 +13,15 @@ namespace AvaloniaFirstApp.Models
         {
             //empty constructor
         }
-        public Account(int id, string name, byte[] data)
+        public Account(int id, string name, byte[] icon)
         {
             this.id = id;
             this.username = name;
-            this.data = data;
+            this.icon = icon;
         }
         public int id { get; set; }
         public string username { get; set; }
-        public byte[] data { get; set; }
+        public byte[] icon { get; set; }
 
         public List<AccountPlaylist> AccountPlaylists { get; set; }
         public List<AccountArtist> AccountArtists { get; set; }

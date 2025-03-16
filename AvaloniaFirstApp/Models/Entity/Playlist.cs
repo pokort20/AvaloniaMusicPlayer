@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,15 +13,15 @@ namespace AvaloniaFirstApp.Models
         {
             //empty constructor
         }
-        public Playlist(int id, string name, byte[] data)
+        public Playlist(int id, string name, byte[] icon)
         {
             this.id = id;
             this.name = name;
-            this.data = data;
+            this.icon = icon;
         }
         public int id { get; set; }
         public string name { get; set; }
-        public byte[] data { get; set; }
+        public byte[] icon { get; set; }
 
         public List<SongPlaylist> SongPlaylists { get; set; }
         public List<AccountPlaylist> AccountPlaylists { get; set; }
