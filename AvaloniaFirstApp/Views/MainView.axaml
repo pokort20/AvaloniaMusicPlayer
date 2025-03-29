@@ -70,7 +70,15 @@
               <StackPanel Classes="leftH">
                 <Image Source="/Assets/avalonia-logo.ico"></Image>
                 <StackPanel Classes="leftV">
-                  <Label HorizontalAlignment="Left" Classes="base" Margin="0,18,0,-4" FontSize="20" Content="{Binding SongName}"></Label>
+                  
+                  <Label HorizontalAlignment="Left"
+                         Classes="base" 
+                         Margin="0,18,0,-4" 
+                         FontSize="20" 
+                         Content="{Binding SongName}">
+                  </Label>
+                  
+                  
                   <Label Grid.Row="1" HorizontalAlignment="Left" FontSize="13" Classes="base" Content="{Binding AuthorName}"></Label>
                 </StackPanel>
               </StackPanel>
@@ -126,352 +134,351 @@
         <!--Border window controls-->
         <Border Classes="base" Grid.Column="2"></Border>
       </Grid>
-    <!--Main-->
-    <Grid Grid.Row="1" ColumnDefinitions="256,*,256">
-      <!--Border your music-->
-      <Border Classes="base" Grid.Column="0">
-          <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Your music</Label>
+      <!--Main-->
+      <Grid Grid.Row="1" ColumnDefinitions="256,*,256">
+        <!--Border your music-->
+        <Border Classes="base" Grid.Column="0">
+            <Grid Grid.Row="1">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Your music</Label>
             
-            <!--Playlists-->
-            <DockPanel Grid.Row="1">
-              <Label DockPanel.Dock="Left" Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
-              <Button DockPanel.Dock="Right" Classes="transparent" 
-                      Command="{Binding AddPlaylistCommand}"
-                      CommandParameter="{Binding $parent[Window]}">
-                <Image Source="avares://AvaloniaFirstApp/Assets/Images/plus.png"></Image>
+              <!--Playlists-->
+              <DockPanel Grid.Row="1">
+                <Label DockPanel.Dock="Left" Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
+                <Button DockPanel.Dock="Right" Classes="transparent" 
+                        Command="{Binding AddPlaylistCommand}"
+                        CommandParameter="{Binding $parent[Window]}">
+                  <Image Source="avares://AvaloniaFirstApp/Assets/Images/plus.png"></Image>
+                </Button>
+              </DockPanel>
+              <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding Playlists}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Delete playlist"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).DeletePlaylistCommand}"
+                                      CommandParameter="{Binding}"/>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPlaylistCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+
+              <!--Artists-->
+              <Label Grid.Row="3" Classes="baseH2" Margin="20,0,0,0">Artists</Label>
+              <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding Artists}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Remove from favourites"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
+                                      CommandParameter="{Binding}"/>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+
+              <!--Albums-->
+              <Label Grid.Row="5" Classes="baseH2" Margin="20,0,0,0">Albums</Label>
+              <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding Albums}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Remove from favourites"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
+                                      CommandParameter="{Binding}"/>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                            <Label Classes="base" FontSize="12" Content="{Binding AlbumArtistsNames}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayAlbumCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+
+              <!--Podcasts-->
+              <Label Grid.Row="7" Classes="baseH2" Margin="20,0,0,0">Podcasts</Label>
+              <ScrollViewer Grid.Row="8" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding Podcasts}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Remove from favourites"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
+                                      CommandParameter="{Binding}"/>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPodcastCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
+        </Border>
+
+
+        <!--Border main content-->
+        <Border Classes="base" Grid.Column="1">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"></RowDefinition>
+              <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <!--Search bar-->
+            <Grid Grid.Row="0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Button Grid.Column="0" Classes="circle">
+                <Image Source="/Assets/Images/left_arrow.png"></Image>
               </Button>
-            </DockPanel>
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding Playlists}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Delete playlist"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).DeletePlaylistCommand}"
-                                    CommandParameter="{Binding}"/>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPlaylistCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
+              <Button Grid.Column="1" Classes="circle">
+                <Image Source="/Assets/Images/right_arrow.png"></Image>
+              </Button>
+              <TextBox Text="{Binding SearchText, Mode=TwoWay}" Grid.Column="2" Classes="base"></TextBox>
+              <Button Grid.Column="3" Classes="circle" Command="{Binding HomeCommand}">
+                <Image Source="/Assets/Images/home.png"></Image>
+              </Button>
+            </Grid>
 
-            <!--Artists-->
-            <Label Grid.Row="3" Classes="baseH2" Margin="20,0,0,0">Artists</Label>
-            <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding Artists}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Remove from favourites"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
-                                    CommandParameter="{Binding}"/>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayArtistCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-
-            <!--Albums-->
-            <Label Grid.Row="5" Classes="baseH2" Margin="20,0,0,0">Albums</Label>
-            <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding Albums}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Remove from favourites"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
-                                    CommandParameter="{Binding}"/>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                          <Label Classes="base" FontSize="12" Content="{Binding AlbumArtistsNames}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayAlbumCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-
-            <!--Podcasts-->
-            <Label Grid.Row="7" Classes="baseH2" Margin="20,0,0,0">Podcasts</Label>
-            <ScrollViewer Grid.Row="8" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding Podcasts}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Remove from favourites"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).RemoveFavouriteCommand}"
-                                    CommandParameter="{Binding}"/>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPodcastCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-          </Grid>
-      </Border>
-
-
-      <!--Border main content-->
-      <Border Classes="base" Grid.Column="1">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-          </Grid.RowDefinitions>
-          <!--Search bar-->
-          <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"></ColumnDefinition>
-              <ColumnDefinition Width="Auto"></ColumnDefinition>
-              <ColumnDefinition Width="*"></ColumnDefinition>
-              <ColumnDefinition Width="Auto"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Classes="circle">
-              <Image Source="/Assets/Images/left_arrow.png"></Image>
-            </Button>
-            <Button Grid.Column="1" Classes="circle">
-              <Image Source="/Assets/Images/right_arrow.png"></Image>
-            </Button>
-            <TextBox Text="{Binding SearchText, Mode=TwoWay}" Grid.Column="2" Classes="base"></TextBox>
-            <Button Grid.Column="3" Classes="circle" Command="{Binding HomeCommand}">
-              <Image Source="/Assets/Images/home.png"></Image>
-            </Button>
+            <!--Tabs-->
+            <views:HomeView IsVisible="{Binding IsHomePageVisible}"  DataContext="{Binding}"  Grid.Row="1"></views:HomeView>
+            <TabControl IsVisible="{Binding IsTabControlVisible}" Grid.Row="1" Classes="base" SelectedIndex="{Binding SelectedTabIndex}">
+              <TabItem Classes="base" Header="Songs">
+                <views:SongTabItem DataContext="{Binding}"/>
+              </TabItem>
+              <TabItem Classes="base" Header="Artists">
+                <views:ArtistTabItem DataContext="{Binding}"/>
+              </TabItem>
+              <TabItem Classes="base" Header="Albums">
+                <views:AlbumTabItem DataContext="{Binding}"/>
+              </TabItem>
+              <TabItem Classes="base" Header="Playlists">
+                <views:PlaylistTabItem DataContext="{Binding}"/>
+              </TabItem>
+              <TabItem Classes="base" Header="Podcasts">
+                <views:PodcastTabItem DataContext="{Binding}"/>
+              </TabItem>
+            </TabControl>
           </Grid>
 
-          <!--Tabs-->
-          <views:HomeView IsVisible="{Binding IsHomePageVisible}"  DataContext="{Binding}"  Grid.Row="1"></views:HomeView>
-          <TabControl IsVisible="{Binding IsTabControlVisible}" Grid.Row="1" Classes="base" SelectedIndex="{Binding SelectedTabIndex}">
-            <TabItem Classes="base" Header="Songs">
-              <views:SongTabItem DataContext="{Binding}"/>
-            </TabItem>
-            <TabItem Classes="base" Header="Artists">
-              <views:ArtistTabItem DataContext="{Binding}"/>
-            </TabItem>
-            <TabItem Classes="base" Header="Albums">
-              <views:AlbumTabItem DataContext="{Binding}"/>
-            </TabItem>
-            <TabItem Classes="base" Header="Playlists">
-              <views:PlaylistTabItem DataContext="{Binding}"/>
-            </TabItem>
-            <TabItem Classes="base" Header="Podcasts">
-              <views:PodcastTabItem DataContext="{Binding}"/>
-            </TabItem>
-          </TabControl>
-        </Grid>
-
-      </Border>
+        </Border>
 
 
-      <!--Border queue & suggestions-->
-      <Border Classes="base" Grid.Column="2">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="1.5*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-          </Grid.RowDefinitions>
-          <Grid Grid.Row="0">
+        <!--Border queue & suggestions-->
+        <Border Classes="base" Grid.Column="2">
+          <Grid>
             <Grid.RowDefinitions>
-              <RowDefinition Height="Auto"></RowDefinition>
+              <RowDefinition Height="1.5*"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Queue</Label>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding SongQueue}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Remove from queue"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextRemoveFromQueueCommand}"
-                                    CommandParameter="{Binding}"/>
-                          <MenuItem Header="Add to playlist"
-                                    ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
-                                    SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
-                                    CommandParameter="{Binding }"
-                                    >
-                            <MenuItem.ItemTemplate>
-                              <DataTemplate>
-                                <Border>
-                                  <MenuItem Header="{Binding name}"/>
-                                </Border>
-                              </DataTemplate>
-                            </MenuItem.ItemTemplate>
-                          </MenuItem>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                          <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-          </Grid>
+            <Grid Grid.Row="0">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Queue</Label>
+              <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding SongQueue}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Remove from queue"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextRemoveFromQueueCommand}"
+                                      CommandParameter="{Binding}"/>
+                            <MenuItem Header="Add to playlist"
+                                      ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
+                                      SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                                      CommandParameter="{Binding }"
+                                      >
+                              <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                  <Border>
+                                    <MenuItem Header="{Binding name}"/>
+                                  </Border>
+                                </DataTemplate>
+                              </MenuItem.ItemTemplate>
+                            </MenuItem>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                            <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
 
-          <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Suggestions</Label>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-              <ItemsControl  ItemsSource="{Binding Suggestions}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border Classes="song" Tag="{Binding}">
-                      <Border.ContextMenu>
-                        <ContextMenu>
-                          <MenuItem Header="Add to queue" 
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToQueueCommand}" 
-                                    CommandParameter="{Binding}"/>
-                          <MenuItem Header="Add to playlist" 
-                                    ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
-                                    SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
-                                    Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
-                                    CommandParameter="{Binding }"
-                                    >
-                            <MenuItem.ItemTemplate>
-                              <DataTemplate>
-                                <Border>
-                                  <MenuItem Header="{Binding name}"/>
-                                </Border>
-                              </DataTemplate>
-                            </MenuItem.ItemTemplate>
-                          </MenuItem>
-                        </ContextMenu>
-                      </Border.ContextMenu>
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
-                        <StackPanel Classes="leftV" Grid.Column="1">
-                          <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
-                          <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
-                        </StackPanel>
-                        <Button Grid.Column="2" Classes="circle"
-                                Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
-                                CommandParameter="{Binding}" >
-                          <Image Source="/Assets/Images/play.png"></Image>
-                        </Button>
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-          </Grid>
+            <Grid Grid.Row="1">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <Label Grid.Row="0" Margin="5,0,0,0" Classes="baseH1">Suggestions</Label>
+              <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl  ItemsSource="{Binding Suggestions}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Classes="song" Tag="{Binding}">
+                        <Border.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Add to queue" 
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToQueueCommand}" 
+                                      CommandParameter="{Binding}"/>
+                            <MenuItem Header="Add to playlist" 
+                                      ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
+                                      SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
+                                      Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                                      CommandParameter="{Binding }"
+                                      >
+                              <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                  <Border>
+                                    <MenuItem Header="{Binding name}"/>
+                                  </Border>
+                                </DataTemplate>
+                              </MenuItem.ItemTemplate>
+                            </MenuItem>
+                          </ContextMenu>
+                        </Border.ContextMenu>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                          <Image Grid.Column="0" Source="/Assets/Images/home.png" Width="25" Height="25" Margin="5,3,5,3"></Image>
+                          <StackPanel Classes="leftV" Grid.Column="1">
+                            <Label Classes="base" FontSize="16" Content="{Binding name}"></Label>
+                            <Label Classes="base" FontSize="12" Content="{Binding SongArtistsNames}"></Label>
+                          </StackPanel>
+                          <Button Grid.Column="2" Classes="circle"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlaySongCommand}"
+                                  CommandParameter="{Binding}" >
+                            <Image Source="/Assets/Images/play.png"></Image>
+                          </Button>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
 
-        </Grid>
-      </Border>
-    </Grid>
-    
+          </Grid>
+        </Border>
+      </Grid>
   </Grid>
 </UserControl>

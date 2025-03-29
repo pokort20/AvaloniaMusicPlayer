@@ -9,9 +9,8 @@ namespace AvaloniaFirstApp.Models
     public class AccountAlbum
     {
         public int accountid { get; set; }
-        public Account Account { get; set; }
-
         public int albumid { get; set; }
+        public Account Account { get; set; }
         public Album Album { get; set; }
     }
 }

@@ -169,6 +169,7 @@ public class MainViewModel : ViewModelBase
         DeletePlaylistCommand = ReactiveCommand.CreateFromTask<Playlist>(DeletePlaylistCommandExecute);
         OnSongBarClicked = ReactiveCommand.Create<PointerPressedEventArgs>(HandleSongProgressClicked);
 
+        
         LoadUserAccountDataAsync();
         InitHomePage();
         InitSongTimer();
@@ -179,21 +180,17 @@ public class MainViewModel : ViewModelBase
     {
         if (isPlaying == false) return;
 
-        // Get the total duration of the song in seconds or milliseconds
-        double songDuration = AudioPlayer.GetTotalTime().TotalSeconds; // Convert TimeSpan to seconds
-        double currentTime = AudioPlayer.GetTimeElapsed().TotalSeconds; // Get the current playback time in seconds
+        double songDuration = AudioPlayer.GetTotalTime().TotalSeconds;
+        double currentTime = AudioPlayer.GetTimeElapsed().TotalSeconds;
 
-        // Check if the current time is less than the total song duration
         if (currentTime < songDuration)
         {
-            // Map the current song time to the slider value range (MinSongProgress to MaxSongProgress)
             SongProgress = Utils.MapToRange(currentTime, 0, songDuration, MinSongProgress, MaxSongProgress);
         }
         else
         {
-            // If the song is finished, set the progress to the max value
             SongProgress = MaxSongProgress;
-            NextCommandExecute(); // Stop the timer when the song is over
+            NextCommandExecute();
         }
     }
 

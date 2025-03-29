@@ -23,13 +23,26 @@
                           CommandParameter="{Binding}"/>
               </ContextMenu>
             </Border.ContextMenu>
-            <StackPanel Classes="baseV">
-              <Button Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPodcastCommand}"
-                      CommandParameter="{Binding}">
-                <Image Classes="cardImage" Width="150" Height="150"/>
-              </Button>
-              <Label Content="{Binding name}" Classes="Base" FontSize="16" HorizontalAlignment="Center"/>
-              <Label Classes="Base" Content="{Binding description}" HorizontalAlignment="Center"/>
+            <StackPanel>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="auto"></ColumnDefinition>
+                  <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="*"></RowDefinition>
+                  <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Margin="5" Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).PlayPodcastCommand}"
+                        CommandParameter="{Binding}">
+                  <Image Classes="cardImage" Width="150" Height="150"/>
+                </Button>
+                <Label Grid.Column="1" Grid.Row="0" Margin="0,60,0,0" HorizontalAlignment="Left" Content="{Binding name}" Classes="Base" FontSize="18"/>
+
+              </Grid>
+              <Border Classes="base" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Label Classes="Base" Content="{Binding description}" HorizontalAlignment="Center"/>
+              </Border>
             </StackPanel>
           </Border>
         </DataTemplate>

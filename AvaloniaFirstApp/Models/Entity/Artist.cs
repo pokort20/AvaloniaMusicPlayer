@@ -8,16 +8,16 @@ namespace AvaloniaFirstApp.Models
 {
     public class Artist
     {
-        public Artist()
-        {
-            //empty constructor
-        }
-        public Artist(int id, string name, byte[] icon)
-        {
-            this.id = id;
-            this.name = name;
-            this.icon = icon;
-        }
+        //public Artist()
+        //{
+        //    //empty constructor
+        //}
+        //public Artist(int id, string name, byte[] icon)
+        //{
+        //    this.id = id;
+        //    this.name = name;
+        //    this.icon = icon;
+        //}
         public int id { get; set; }
         public string name { get; set; }
         public byte[] icon { get; set; }

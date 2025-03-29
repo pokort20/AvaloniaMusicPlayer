@@ -15,6 +15,19 @@ namespace AvaloniaFirstApp.Models
         private static Mp3FileReader mp3FileReader;
         private static Random r = new Random();
         public static bool isInitiated = false;
+        /// <summary>
+        /// Unused method for playing audio
+        /// </summary>
+        /// <param name="path"></param>
+        public static void Play(string path)
+        {
+            Cleanup();
+            mp3FileReader = new Mp3FileReader(path);
+            waveOutEvent = new WaveOutEvent();
+            waveOutEvent.Init(mp3FileReader);
+            waveOutEvent.Play();
+            isInitiated = true;
+        }
         public static void Play()
         {
             Cleanup();
