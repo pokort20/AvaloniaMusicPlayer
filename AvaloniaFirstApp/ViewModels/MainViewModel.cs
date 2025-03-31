@@ -748,11 +748,13 @@ public class MainViewModel : ViewModelBase
             Podcasts.Clear();
             foreach(Playlist p in await dh.GetFavouritePlaylists(UserAccount))
             {
+                Console.WriteLine(p);
                 Playlists.Add(p);
             }
             foreach (Artist a in await dh.GetFavouriteArtists(UserAccount))
             {
                 Artists.Add(a);
+                Console.WriteLine(a);
             }
             foreach (Album a in await dh.GetFavouriteAlbums(UserAccount))
             {
@@ -765,8 +767,7 @@ public class MainViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            // Handle any potential exceptions, e.g., logging, displaying error message
-            Console.WriteLine($"Error loading account: {ex.Message}");
+            Console.WriteLine("Error loading account: " + ex.Message);
         }
     }
     private void InitVariables()

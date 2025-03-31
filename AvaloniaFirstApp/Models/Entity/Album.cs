@@ -22,7 +22,7 @@ namespace AvaloniaFirstApp.Models
         }
         public int id { get; set; }
         public string name { get; set; }
-        public byte[] icon { get; set; }
+        public byte[]? icon { get; set; }
         public int year { get; set; }
 
         public List<AlbumArtist> AlbumArtists { get; set; }

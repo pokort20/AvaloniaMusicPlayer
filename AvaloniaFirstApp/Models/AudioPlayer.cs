@@ -13,7 +13,6 @@ namespace AvaloniaFirstApp.Models
     {
         private static WaveOutEvent waveOutEvent;
         private static Mp3FileReader mp3FileReader;
-        private static Random r = new Random();
         public static bool isInitiated = false;
         /// <summary>
         /// Unused method for playing audio
@@ -31,7 +30,7 @@ namespace AvaloniaFirstApp.Models
         public static void Play()
         {
             Cleanup();
-            mp3FileReader = new Mp3FileReader("../../../../AvaloniaFirstApp/Assets/Sounds/" + r.Next(3).ToString() + ".mp3");
+            mp3FileReader = new Mp3FileReader("../../../../AvaloniaFirstApp/Assets/Sounds/0.mp3");
             waveOutEvent = new WaveOutEvent();
             waveOutEvent.Init(mp3FileReader);
             waveOutEvent.Play();

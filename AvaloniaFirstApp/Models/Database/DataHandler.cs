@@ -179,6 +179,7 @@ namespace AvaloniaFirstApp.Database
         public async Task<List<Playlist>> GetFavouritePlaylists(Account account)
         {
             Debug.WriteLine("favourite playlists db access");
+            //return new List<Playlist>{ new Playlist(1, 1, "Chillec", new byte[1]) };
             using var db = new DatabaseContext();
             return await db.Playlists
                 .Where(p => p.AccountPlaylists.Any(ap => ap.accountid == account.id))
@@ -186,7 +187,7 @@ namespace AvaloniaFirstApp.Database
         }
         public async Task<List<Artist>> GetFavouriteArtists(Account account)
         {
-            Debug.WriteLine("favourite playlists db access");
+            Debug.WriteLine("favourite playlists db access, accountid: " + account.id);
             using var db = new DatabaseContext();
             return await db.Artists
                 .Where(a => a.AccountArtists.Any(aa => aa.accountid == account.id))
@@ -243,9 +244,8 @@ namespace AvaloniaFirstApp.Database
             try
             {
                 db.Playlists.Add(playlist);
-                await db.SaveChangesAsync(); // Save to get the generated playlist ID
+                await db.SaveChangesAsync();
 
-                // Create the relation in account_playlist
                 var accountPlaylist = new AccountPlaylist
                 {
                     accountid = account.id,
@@ -253,7 +253,7 @@ namespace AvaloniaFirstApp.Database
                 };
 
                 db.AccountPlaylists.Add(accountPlaylist);
-                await db.SaveChangesAsync(); // Save relation
+                await db.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

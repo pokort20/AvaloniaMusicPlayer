@@ -108,7 +108,6 @@ namespace AvaloniaFirstApp.Database
                 .WithMany(a => a.PodcastArtists)
                 .HasForeignKey(pa => pa.artistid);
 
-            // Relationships for account relation tables
 
             modelBuilder.Entity<AccountPlaylist>()
                 .HasOne(ap => ap.Account)

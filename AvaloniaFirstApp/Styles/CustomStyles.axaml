@@ -123,15 +123,6 @@
     <Setter Property="CornerRadius" Value="10"></Setter>
     <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
   </Style>
-  <!--<Style Selector="TextBox.base:pointerover /template/ Border">
-    <Setter Property="Background" Value="{DynamicResource PrimaryBG}"></Setter>
-    <Setter Property="Foreground" Value="{DynamicResource PrimaryFont}"></Setter>
-    <Setter Property="CaretBrush" Value="{DynamicResource PrimaryFont}"></Setter>
-    <Setter Property="BorderThickness" Value="3"></Setter>
-    <Setter Property="CornerRadius" Value="10"></Setter>
-    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryElement}"></Setter>
-    <Setter Property="FontSize" Value="20"></Setter>
-  </Style>-->
   
   <!--Slider styles-->
   <Style Selector="Slider.volume">
@@ -147,7 +138,6 @@
     <Setter Property="Height" Value="20"></Setter>
   </Style>
 
-  <!-- Default Thumb Style (Visible by default) -->
   <Style Selector="Slider.volume Thumb">
     <Setter Property="Template">
       <ControlTemplate TargetType="Thumb">
@@ -157,13 +147,11 @@
     </Setter>
   </Style>
 
-  <!-- Hide Thumb for Slider.song by default -->
   <Style Selector="Slider.song Thumb">
     <Setter Property="IsVisible" Value="False"></Setter>
     <Setter Property="Background" Value="Transparent"></Setter>
   </Style>
 
-  <!-- Show Thumb for Slider.song on pointerover -->
   <Style Selector="Slider.song:pointerover Thumb">
     <Setter Property="IsVisible" Value="True"></Setter>
     <Setter Property="Background" Value="{DynamicResource PrimaryElement}"></Setter>
@@ -171,29 +159,6 @@
 
   
   <!--TabControl styles-->
-  <!--<Style Selector="TabControl.base">
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="TabControl">
-          <DockPanel>
-            --><!-- Customized TabStrip --><!--
-            <TabStrip DockPanel.Dock="Top"
-                      Margin="0,0,0,5"
-                      Background="LightGray"
-                      Padding="5"
-                      CornerRadius="4">
-              --><!-- You can further style TabItem elements using ItemContainerStyle --><!--
-            </TabStrip>
-            --><!-- ContentPresenter for the selected tab content --><!--
-            <ContentPresenter Name="PART_SelectedContentHost"
-                              Margin="5"
-                              Content="{TemplateBinding SelectedContent}"
-                              Background="WhiteSmoke"/>
-          </DockPanel>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>-->
   <Style Selector="TabItem.base">
     <Setter Property="Padding" Value="10,5"/>
     <Setter Property="Background" Value="Transparent"/>

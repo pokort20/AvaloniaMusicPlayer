@@ -24,8 +24,8 @@ namespace AvaloniaFirstApp.Models
         public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public byte[] icon { get; set; }
-        public byte[] data { get; set; }
+        public byte[]? icon { get; set; }
+        public byte[]? data { get; set; }
         public TimeSpan duration { get; set; }
         public List<PodcastArtist> PodcastArtists { get; set; }
         public List<AccountPodcast> AccountPodcasts { get; set; }
