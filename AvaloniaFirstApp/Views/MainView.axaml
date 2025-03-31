@@ -12,8 +12,6 @@
              MinWidth="800"
              MinHeight="400">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
   <Grid Background="{DynamicResource TernaryBG}">
@@ -85,29 +83,29 @@
               
               <!--Stack panel play controls-->
               <StackPanel Classes="baseH" Grid.Column="1">
-                <ToggleButton Classes="transparent" Command="{Binding ShuffleCommand}" Margin="0,0,20,0">
+                <ToggleButton Classes="transparent" Command="{Binding ShuffleCommand}" Margin="0,0,20,0" ToolTip.Tip="Shuffle">
                   <Image Width="25" Height=" 25" Source="/Assets/Images/shuffle.png"></Image>
                 </ToggleButton>
-                <Button Classes="circle" Command="{Binding PreviousCommand}">
+                <Button Classes="circle" Command="{Binding PreviousCommand}" ToolTip.Tip="Previous">
                   <Image Source="/Assets/Images/previous.png"></Image>
                 </Button>
-                <Button Classes="circle" Height="50" Width="50" Command="{Binding PlayPauseCommand}">
+                <Button Classes="circle" Height="50" Width="50" Command="{Binding PlayPauseCommand}" ToolTip.Tip="Play/Pause">
                   <Image Source="{Binding PlayPauseImage}"></Image>
                 </Button>
-                <Button Classes="circle" Command="{Binding NextCommand}">
+                <Button Classes="circle" Command="{Binding NextCommand}" ToolTip.Tip="Next">
                   <Image Source="/Assets/Images/next.png"></Image>
                 </Button>
-                <ToggleButton Classes="transparent" Command="{Binding RepeatCommand}" Margin="20,0,0,0">
+                <ToggleButton Classes="transparent" Command="{Binding RepeatCommand}" Margin="20,0,0,0" ToolTip.Tip="Repeat">
                   <Image Width="20" Height=" 20" Source="/Assets/Images/repeat.png"></Image>
                 </ToggleButton>
               </StackPanel>
               
               <!--Border volume-->
               <StackPanel Grid.Column="2" Classes="rightH">
-                <Button Classes="transparent" Command="{Binding MuteCommand}">
+                <Button Classes="transparent" Command="{Binding MuteCommand}" ToolTip.Tip="Mute/Unmute">
                   <Image Source="{Binding VolumeImage}"></Image>
                 </Button>
-                <Slider Classes="volume" Value="{Binding Volume}"></Slider>
+                <Slider Classes="volume" Value="{Binding Volume}" ToolTip.Tip="Volume"></Slider>
               </StackPanel>
             </Grid>
             
@@ -155,7 +153,7 @@
               <!--Playlists-->
               <DockPanel Grid.Row="1">
                 <Label DockPanel.Dock="Left" Classes="baseH2" Margin="20,0,0,0">Playlists</Label>
-                <Button DockPanel.Dock="Right" Classes="transparent" 
+                <Button DockPanel.Dock="Right" Classes="transparent" ToolTip.Tip="Add playlist"
                         Command="{Binding AddPlaylistCommand}"
                         CommandParameter="{Binding $parent[Window]}">
                   <Image Source="avares://AvaloniaFirstApp/Assets/Images/plus.png"></Image>

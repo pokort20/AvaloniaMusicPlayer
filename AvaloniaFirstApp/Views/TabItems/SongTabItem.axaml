@@ -17,19 +17,16 @@
                           Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextRemoveFromQueueCommand}"
                           CommandParameter="{Binding}"/>
                 <MenuItem Header="Add to playlist"
-                          ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}"
-                          SelectedItem="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).SelectedPlaylist}"
-                          Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
-                          CommandParameter="{Binding }"
-                                    >
+          ItemsSource="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).Playlists}">
                   <MenuItem.ItemTemplate>
                     <DataTemplate>
-                      <Border>
-                        <MenuItem Header="{Binding name}"/>
-                      </Border>
+                      <MenuItem Header="{Binding name}"
+                                Command="{Binding $parent[ScrollViewer].((vm:MainViewModel)DataContext).ContextAddToPlaylistCommand}"
+                                CommandParameter="{Binding .}" />
                     </DataTemplate>
                   </MenuItem.ItemTemplate>
                 </MenuItem>
+
               </ContextMenu>
             </Border.ContextMenu>
             <Grid>

@@ -558,6 +558,7 @@ public class MainViewModel : ViewModelBase
         {
             if (_volume != value)
             {
+                if (value > 0 && isMuted) isMuted = false;
                 this.RaiseAndSetIfChanged(ref _volume, value);
                 AudioPlayer.ChangeVolume((float)Utils.MapToRange(value, 0.0, 50.0, 0.0, 1.0));
                 ChangeVolumeImage(value);
@@ -798,6 +799,7 @@ public class MainViewModel : ViewModelBase
         volumeLowImage = new Bitmap("../../../../AvaloniaFirstApp/Assets/Images/volume1.png");
         volumeHighImage = new Bitmap("../../../../AvaloniaFirstApp/Assets/Images/volume2.png");
         PlayPauseImage = playImage;
+        VolumeImage = volumeLowImage;
     }
     private void ChangeVolumeImage(double volume)
     {

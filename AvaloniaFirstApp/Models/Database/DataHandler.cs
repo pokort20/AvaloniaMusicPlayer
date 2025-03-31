@@ -269,7 +269,10 @@ namespace AvaloniaFirstApp.Database
             {
                 var accountPlaylist = await db.AccountPlaylists
                     .FirstOrDefaultAsync(ap => ap.accountid == account.id && ap.playlistid == playlist.id);
-
+                foreach(var songplaylist in await db.SongPlaylists.Where(sp => sp.playlistid == playlist.id).ToListAsync())
+                {
+                    db.SongPlaylists.Remove(songplaylist);
+                }
                 if (accountPlaylist != null)
                 {
                     db.AccountPlaylists.Remove(accountPlaylist);
@@ -286,7 +289,7 @@ namespace AvaloniaFirstApp.Database
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error deleting playlist: {ex.Message}");
+                Debug.WriteLine("Error deleting playlist: " + ex.Message);
                 return false;
             }
         }
